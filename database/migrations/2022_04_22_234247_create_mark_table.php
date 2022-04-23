@@ -14,8 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('mark', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->char('examID', 8);
+            $table->char('studentID', 11);
+            $table->smallInteger('mark')->default(0);
+            $table->foreign('examID')->references('examID')->on('exams')->cascadeOnDelete();
+            $table->foreign('studentID')->references('studentID')->on('students')->cascadeOnDelete();
+            $table->primary(['examID', 'studentID']);
         });
     }
 

@@ -14,8 +14,16 @@ return new class extends Migration
     public function up()
     {
         Schema::create('exams', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->char('examID', 8);
+            $table->string('exam', 100);
+            $table->date('date');
+            $table->char('subjectID', 8);
+            $table->char('categoryID', 8);
+            $table->char('classID', 8);
+            $table->foreign('classID')->references('classID')->on('classes');
+            $table->foreign('categoryID')->references('categoryID')->on('categories');
+            $table->foreign('subjectID')->references('subjectID')->on('subjects');
+            $table->primary('examID');
         });
     }
 

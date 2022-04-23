@@ -14,9 +14,21 @@ return new class extends Migration
     public function up()
     {
         Schema::create('people', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->char('personID', 11);
+            $table->string('personType', 100);
+            $table->string('firstName', 50);
+            $table->string('lastName', 50)->nullable();
+            $table->date('dob');
+            $table->char('sex', 6);
+            $table->char('telNo', 10);
+            $table->string('address', 150);
+            $table->string('email', 50);
+            $table->char('status', 10)->default('Active');
+            $table->date('joinedDate');
+            $table->primary('personID');
         });
+
+        DB::statement('ALTER TABLE people ADD CHECK(status IN ("Active", "Past", "Deactivate"));');
     }
 
     /**

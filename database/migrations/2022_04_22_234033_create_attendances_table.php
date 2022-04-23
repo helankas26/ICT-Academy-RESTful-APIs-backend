@@ -14,9 +14,17 @@ return new class extends Migration
     public function up()
     {
         Schema::create('attendances', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->char('studentID', 11);
+            $table->char('classID', 8);
+            $table->date('date');
+            $table->time('time');
+            $table->smallInteger('status')->default(0)->comment('Present = 1, Absent = 0');
+            $table->foreign('studentID')->references('studentID')->on('students')->cascadeOnDelete();
+            $table->foreign('classID')->references('classID')->on('classes')->cascadeOnDelete();
+            $table->primary(['studentID','classID', 'date']);
         });
+
+        DB::statement('ALTER TABLE attendances ADD CHECK(status IN (0, 1));');
     }
 
     /**

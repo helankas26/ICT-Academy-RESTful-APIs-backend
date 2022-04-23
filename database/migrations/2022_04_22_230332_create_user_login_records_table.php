@@ -14,8 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('user_login_records', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->char('userID', 8);
+            $table->date('loginDate');
+            $table->time('loginTime');
+            $table->time('logoutTime')->nullable();
+            $table->foreign('userID')->references('userID')->on('users');
+            $table->primary(['userID', 'loginDate', 'loginTime']);
         });
     }
 

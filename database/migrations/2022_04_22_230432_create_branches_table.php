@@ -14,8 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('branches', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->char('branchID', 8);
+            $table->string('branchName', 50);
+            $table->char('telNo', 10)->nullable();
+            $table->string('address', 150)->nullable();
+            $table->string('noOfRooms', 2)->nullable();
+            $table->primary('branchID');
         });
     }
 

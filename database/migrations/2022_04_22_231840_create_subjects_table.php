@@ -14,9 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::create('subjects', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->char('subjectID', 8);
+            $table->string('subjectName', 20);
+            $table->char('medium', 7);
+            $table->char('categoryID', 8);
+            $table->foreign('categoryID')->references('categoryID')->on('categories');
+            $table->primary('subjectID');
         });
+
+        DB::statement('ALTER TABLE subjects ADD CHECK (medium IN ("Sinhala", "English", "Tamil"));');
     }
 
     /**

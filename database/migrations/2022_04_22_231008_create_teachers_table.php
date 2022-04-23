@@ -14,8 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('teachers', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->char('teacherID', 11);
+            $table->string('qualification', 300);
+            $table->foreign('teacherID')->references('employeeID')->on('employees')->cascadeOnDelete();
+            $table->primary('teacherID');
         });
     }
 

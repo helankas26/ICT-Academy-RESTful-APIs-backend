@@ -14,9 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->char('employeeID', 11);
+            $table->string('employeeType', 100);
+            $table->char('nic', 12);
+            $table->char('title', 5);
+            $table->foreign('employeeID')->references('personID')->on('people')->cascadeOnDelete();
+            $table->primary('employeeID');
         });
+
+        DB::statement('ALTER TABLE employees ADD CHECK(title IN ("Mr.", "Miss.", "Mrs.", "Ms.", "Rev."));');
     }
 
     /**

@@ -14,8 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::create('advances', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('advanceID');
+            $table->string('description', 100);
+            $table->decimal('advanceAmount', 8, 2);
+            $table->date('date');
+            $table->char('handlerStaffID', 11);
+            $table->char('branchID', 8);
+            $table->foreign('handlerStaffID')->references('staffID')->on('staff');
+            $table->foreign('branchID')->references('branchID')->on('branches');
+            //$table->primary('advanceID');
         });
     }
 

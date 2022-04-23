@@ -14,14 +14,17 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->char('userID', 8);
+            $table->string('userName', 30)->unique();
+            $table->char('password', 100)->unique();
+            $table->char('privilege', 13)->default('Guess');
+            $table->char('status', 10)->default('Active');
             $table->rememberToken();
-            $table->timestamps();
+            $table->primary('userID');
         });
+
+        DB::statement('ALTER TABLE users ADD CHECK (privilege IN ("Administrator", "Standard", "Guess"));');
+        DB::statement('ALTER TABLE users ADD CHECK(status IN ("Active", "Deactivate"));');
     }
 
     /**

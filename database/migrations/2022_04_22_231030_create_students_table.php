@@ -14,9 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::create('students', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->char('studentID', 11);
+            $table->char('grade', 5);
+            $table->char('branchID', 8);
+            $table->foreign('studentID')->references('personID')->on('people')->cascadeOnDelete();
+            $table->foreign('branchID')->references('branchID')->on('branches');
+            $table->primary('studentID');
         });
+
+        DB::statement('ALTER TABLE students ADD CHECK (grade IN ("Other") OR grade BETWEEN 1 AND 13);');
     }
 
     /**
