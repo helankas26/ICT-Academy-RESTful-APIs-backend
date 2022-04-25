@@ -23,7 +23,7 @@ return new class extends Migration
             $table->primary('userID');
         });
 
-        DB::statement('ALTER TABLE users ADD CHECK (privilege IN ("Administrator", "Standard", "Guess"));');
+        DB::statement('ALTER TABLE users ADD CHECK (privilege IN ("Super", "Administrator", "Standard", "Guess"));');
         DB::statement('ALTER TABLE users ADD CHECK(status IN ("Active", "Deactivate"));');
     }
 
