@@ -7,10 +7,56 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
+
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'userID';
+
+    /**
+     * Indicates if the model's ID is auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
+     * The data type of the auto-incrementing ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'string';
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'privilege' => 'Guess',
+        'status' => 'Active',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +65,6 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
         'password',
     ];
 
@@ -34,11 +79,10 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
+     * Get the employee that owns the user.
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function employee(): BelongsTo
+    {
+        return $this->belongsTo(Employee::class , 'employeeID', 'employeeID');
+    }
 }
