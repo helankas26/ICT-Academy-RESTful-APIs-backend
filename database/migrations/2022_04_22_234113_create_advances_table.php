@@ -18,8 +18,10 @@ return new class extends Migration
             $table->string('description', 100);
             $table->decimal('advanceAmount', 8, 2);
             $table->date('date');
+            $table->char('employeeID', 11);
             $table->char('handlerStaffID', 11);
             $table->char('branchID', 8);
+            $table->foreign('employeeID')->references('employeeID')->on('employees');
             $table->foreign('handlerStaffID')->references('staffID')->on('staff');
             $table->foreign('branchID')->references('branchID')->on('branches');
             //$table->primary('advanceID');

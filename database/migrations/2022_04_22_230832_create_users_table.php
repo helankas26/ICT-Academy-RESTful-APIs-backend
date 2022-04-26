@@ -18,8 +18,10 @@ return new class extends Migration
             $table->string('userName', 30)->unique();
             $table->char('password', 100)->unique();
             $table->char('privilege', 13)->default('Guess');
+            $table->char('employeeID', 11);
             $table->char('status', 10)->default('Active');
             $table->rememberToken();
+            $table->foreign('employeeID')->references('employeeID')->on('employees');
             $table->primary('userID');
         });
 
