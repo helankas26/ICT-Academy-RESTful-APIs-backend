@@ -28,6 +28,7 @@ return new class extends Migration
             $table->primary('personID');
         });
 
+        DB::statement('ALTER TABLE people ADD CHECK(personType IN ("Student", "Employee"));');
         DB::statement('ALTER TABLE people ADD CHECK(status IN ("Super", "Active", "Past", "Deactivate"));');
     }
 

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->primary('employeeID');
         });
 
+        DB::statement('ALTER TABLE employees ADD CHECK(employeeType IN ("Staff", "Teacher"));');
         DB::statement('ALTER TABLE employees ADD CHECK(title IN ("Mr.", "Miss.", "Mrs.", "Ms.", "Rev."));');
     }
 
