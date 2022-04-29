@@ -29,6 +29,7 @@ return new class extends Migration
         });
 
         DB::statement('ALTER TABLE people ADD CHECK(personType IN ("Student", "Employee"));');
+        DB::statement('ALTER TABLE people ADD CHECK(sex IN ("Male", "Female", "Other"));');
         DB::statement('ALTER TABLE people ADD CHECK(status IN ("Super", "Active", "Past", "Deactivate"));');
     }
 

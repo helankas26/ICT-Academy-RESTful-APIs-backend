@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class StaffSeeder extends Seeder
 {
@@ -14,6 +15,9 @@ class StaffSeeder extends Seeder
      */
     public function run()
     {
-        //
+        DB::table('staff')->insert([
+            'staffID' => 'STAFF001',
+            'branchID' => 'BRNCH001',
+        ]);
     }
 }
