@@ -2,24 +2,23 @@
 
 namespace Database\Seeders;
 
-use App\Services\Implementation\IDGeneratorService;
-
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Services\Implementation\IDGenerate\IDGenerateService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      *
+     * @param IDGenerateService $IDGenerateService
      * @return void
      */
-    public function run(IDGeneratorService $IDGeneratorService)
+    public function run(IDGenerateService $IDGenerateService)
     {
         DB::table('users')->insert([
-            'userID' => $IDGeneratorService->userID(),
+            'userID' => $IDGenerateService->userID(),
             'userName' => 'SuperAdmin',
             'password' => Hash::make('adminSuper2018'),
             'privilege' => 'Super',

@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Services\Interfaces;
+namespace App\Services\Interfaces\IDGenerate;
 
-use Illuminate\Support\Collection;
 
-interface IDGeneratorServiceInterface
+interface IDGenerateServiceInterface
 {
     const BRANCH = 'BRNCH';
     const STAFF = 'STAFF';
@@ -25,7 +24,4 @@ interface IDGeneratorServiceInterface
     public function subjectID(): string;
     public function classID(): string;
     public function examID(): string;
-
-    public function generateID(string $prefix, Collection $currentIDs): string;
-    public function generateStudentID(string $dob, Collection $currentIDs): string;
 }

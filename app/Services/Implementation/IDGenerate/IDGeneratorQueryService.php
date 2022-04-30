@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\Implementation;
+namespace App\Services\Implementation\IDGenerate;
 
-use App\Services\Interfaces\IDGeneratorQueryServiceInterface;
+use App\Services\Interfaces\IDGenerate\IDGeneratorQueryServiceInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 

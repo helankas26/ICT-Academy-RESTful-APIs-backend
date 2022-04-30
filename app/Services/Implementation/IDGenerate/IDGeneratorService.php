@@ -1,99 +1,15 @@
 <?php
 
-namespace App\Services\Implementation;
+namespace App\Services\Implementation\IDGenerate;
 
-use App\Services\Interfaces\IDGeneratorServiceInterface;
+use App\Services\Interfaces\IDGenerate\IDGenerateServiceInterface;
+use App\Services\Interfaces\IDGenerate\IDGeneratorServiceInterface;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Illuminate\Support\Carbon;
 
 class IDGeneratorService implements IDGeneratorServiceInterface
 {
-    /**
-     * @var IDGeneratorQueryService
-     */
-    private IDGeneratorQueryService $queryService;
-
-    /**
-     * @param IDGeneratorQueryService $queryService
-     */
-    public function __construct(IDGeneratorQueryService $queryService)
-    {
-        $this->queryService = $queryService;
-    }
-
-    /**
-     * @return string
-     */
-    public function branchID(): string
-    {
-        return $this->generateID(self::BRANCH, $this->queryService->getBranchIDs());
-    }
-
-    /**
-     * @return string
-     */
-    public function staffID(): string
-    {
-        return $this->generateID(self::STAFF, $this->queryService->getStaffIDs());
-    }
-
-    /**
-     * @return string
-     */
-    public function teacherID(): string
-    {
-        return $this->generateID(self::TEACHER, $this->queryService->getTeacherIDs());
-    }
-
-    /**
-     * @return string
-     */
-    public function userID(): string
-    {
-        return $this->generateID(self::USER, $this->queryService->getUserIDs());
-    }
-
-    /**
-     * @param string $dob
-     * @return string
-     */
-    public function studentID(string $dob): string
-    {
-        return $this->generateStudentID($dob, $this->queryService->getStudentIDs());
-    }
-
-    /**
-     * @return string
-     */
-    public function categoryID(): string
-    {
-        return $this->generateID(self::CATEGORY, $this->queryService->getCategoryIDs());
-    }
-
-    /**
-     * @return string
-     */
-    public function subjectID(): string
-    {
-        return $this->generateID(self::SUBJECT, $this->queryService->getSubjectIDs());
-    }
-
-    /**
-     * @return string
-     */
-    public function classID(): string
-    {
-        return $this->generateID(self::CLASSES, $this->queryService->getClassIDs());
-    }
-
-    /**
-     * @return string
-     */
-    public function examID(): string
-    {
-        return $this->generateID(self::EXAM, $this->queryService->getExamIDs());
-    }
 
     /**
      * @param string $prefix
@@ -106,7 +22,7 @@ class IDGeneratorService implements IDGeneratorServiceInterface
         $rowCount = $currentIDs->count();
 
         switch ($prefix) {
-            case self::EXAM:
+            case IDGenerateServiceInterface::EXAM:
 
                 if ($rowCount > 0) {
                     $counter = (int) Str::remove($prefix , $currentIDs->get($currentIDs->count() - 1));
@@ -171,18 +87,18 @@ class IDGeneratorService implements IDGeneratorServiceInterface
 
             if ($currentYear == $prevYear) {
                 if ($counter < 999) {
-                    $id = self::STUDENT . $currentYear . (++$counter);
+                    $id = IDGenerateServiceInterface::STUDENT . $currentYear . (++$counter);
                 } else {
                     $id  = "Student ID creation limit is exceeded for the system in this year " . $dob;
                 }
             } else if ($currentYear > $prevYear) {
-                $id = self::STUDENT . $currentYear + '001';
+                $id = IDGenerateServiceInterface::STUDENT . $currentYear + '001';
             } else if ($currentYear < $prevYear) {
                 generateStudentID($dob, IDGeneratorQueryService::getStudentIDsByDOB($dob));
             }
 
         } else if ($rowCount == 0) {
-            $id = Self::STUDENT . $currentYear . '00' . (++$rowCount);
+            $id = IDGenerateServiceInterface::STUDENT . $currentYear . '00' . (++$rowCount);
         }
         return $id;
     }
