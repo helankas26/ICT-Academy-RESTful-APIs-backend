@@ -15,7 +15,7 @@ class RouteHelper
             if (!$it->isDot()
                 && $it->isFile()
                 && $it->isReadable()
-                && $it->current()->getExtension() === '.php')
+                && $it->current()->getExtension() === 'php')
             {
                 require_once $it->key();
             }
