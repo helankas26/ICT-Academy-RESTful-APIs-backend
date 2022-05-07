@@ -3,9 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class BranchCollection extends ResourceCollection
+class BranchResource extends JsonResource
 {
     /**
      * The "data" wrapper that should be applied.
@@ -15,17 +15,21 @@ class BranchCollection extends ResourceCollection
     public static $wrap = 'branch';
 
     /**
-     * Transform the resource collection into an array.
+     * Transform the resource into an array.
      *
      * @param  Request  $request
      * @return array
      */
     public function toArray($request)
     {
-        return [
-            'data' => BranchResource::collection($this->collection),
-            'meta' => ['branch_count' => $this->collection->count()],
+        return  [
+            'branchID' => $this->branchID,
+            'branchName' => $this->branchName,
+            'telNo' => $this->telNo,
+            'address' => $this->address,
+            'noOfRooms' => $this->noOfRooms,
         ];
+
     }
 
     /**

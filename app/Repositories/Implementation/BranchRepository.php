@@ -2,53 +2,91 @@
 
 namespace App\Repositories\Implementation;
 
+use App\Http\Requests\StoreBranchRequest;
+use App\Http\Requests\UpdateBranchRequest;
+use App\Models\Branch;
 use App\Repositories\Interfaces\BranchRepositoryInterface;
+use App\Services\Interfaces\IDGenerate\IDGenerateServiceInterface;
+use Exception;
 
 class BranchRepository implements BranchRepositoryInterface
 {
+    /**
+     * @var IDGenerateServiceInterface
+     */
+    private IDGenerateServiceInterface $IDGenerateService;
+
+    public function __construct(IDGenerateServiceInterface $IDGenerateService)
+    {
+        $this->IDGenerateService = $IDGenerateService;
+    }
 
     /**
      * @return mixed
      */
     public function getAllBranches()
     {
-        // TODO: Implement getAllBranches() method.
+        return Branch::query()->get();
     }
 
     /**
-     * @param array $request
+     * @param StoreBranchRequest $request
      * @return mixed
      */
-    public function createBranch(array $request)
+    public function createBranch(StoreBranchRequest $request)
     {
-        // TODO: Implement createBranch() method.
+        return Branch::query()->create([
+            'branchID' => $this->IDGenerateService->branchID(),
+            'branchName' => data_get($request, 'branchName'),
+            'telNo' => data_get($request, 'telNo'),
+            'address' => data_get($request, 'address'),
+            'noOfRooms' => data_get($request, 'noOfRooms'),
+        ]);
     }
 
     /**
-     * @param $branch
+     * @param Branch $branch
      * @return mixed
      */
-    public function getBranchById($branch)
+    public function getBranchById(Branch $branch)
     {
-        // TODO: Implement getBranchById() method.
+        return Branch::query()->find($branch);
     }
 
     /**
-     * @param array $request
-     * @param $branch
+     * @param UpdateBranchRequest $request
+     * @param Branch $branch
      * @return mixed
+     * @throws Exception
      */
-    public function updateBranch(array $request, $branch)
+    public function updateBranch(UpdateBranchRequest $request, Branch $branch)
     {
-        // TODO: Implement updateBranch() method.
+        $updated = $branch->update([
+            'branchName' => data_get($request, 'branchName', $branch->branchName),
+            'telNo' => data_get($request, 'telNo', $branch->telNo),
+            'address' => data_get($request, 'address', $branch->address),
+            'noOfRooms' => data_get($request, 'noOfRooms', $branch->noOfRooms),
+        ]);
+
+        if (!$updated){
+            throw new Exception('Failed to update Branch: ' . $branch->branchID);
+        }
+
+        return $branch;
     }
 
     /**
-     * @param $branch
+     * @param Branch $branch
      * @return mixed
      */
-    public function forceDeleteBranch($branch)
+    public function forceDeleteBranch(Branch $branch)
     {
-        // TODO: Implement forceDeleteBranch() method.
+        $deleted = $branch->delete();
+
+        if (!$deleted){
+            throw new Exception('Failed to delete Branch: ' . $branch->branchID);
+        }
+
+        return $deleted;
     }
 }

@@ -46,6 +46,13 @@ class Branch extends Model
     public $timestamps = false;
 
     /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
      * Get the staff for the branch.
      */
     public function staff(): HasMany
