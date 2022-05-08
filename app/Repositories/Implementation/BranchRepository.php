@@ -78,6 +78,7 @@ class BranchRepository implements BranchRepositoryInterface
     /**
      * @param Branch $branch
      * @return mixed
+     * @throws Exception
      */
     public function forceDeleteBranch(Branch $branch)
     {

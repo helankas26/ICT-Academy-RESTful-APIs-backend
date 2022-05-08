@@ -8,7 +8,6 @@ use App\Models\Branch;
 use App\Http\Requests\StoreBranchRequest;
 use App\Http\Requests\UpdateBranchRequest;
 use App\Repositories\Interfaces\BranchRepositoryInterface;
-use App\Services\Implementation\IDGenerate\IDGenerateService;
 use Illuminate\Http\JsonResponse;
 
 class BranchController extends Controller
@@ -42,7 +41,7 @@ class BranchController extends Controller
      * @param StoreBranchRequest $request
      * @return BranchResource
      */
-    public function store(StoreBranchRequest $request, IDGenerateService $IDGenerateService)
+    public function store(StoreBranchRequest $request)
     {
         $created = $this->branchRepository->createBranch($request);
 
@@ -87,7 +86,7 @@ class BranchController extends Controller
         $deleted = $this->branchRepository->forceDeleteBranch($branch);
 
         return new JsonResponse([
-            'success' => true,
+            'success' => $deleted,
             'status' => 'deleted',
             'data' => $branch,
         ]);
