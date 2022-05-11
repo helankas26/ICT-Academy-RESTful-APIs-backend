@@ -34,7 +34,7 @@ class IDGenerateServiceProvider extends ServiceProvider
     {
         $this->app->singleton(IDGenerateService::class, function ($app){
             $queryService = new IDGeneratorQueryService();
-            $generatorService = new IDGeneratorService();
+            $generatorService = new IDGeneratorService($queryService);
 
             return new IDGenerateService($generatorService, $queryService);
         });

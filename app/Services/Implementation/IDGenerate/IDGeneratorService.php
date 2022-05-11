@@ -3,13 +3,24 @@
 namespace App\Services\Implementation\IDGenerate;
 
 use App\Services\Interfaces\IDGenerate\IDGenerateServiceInterface;
+use App\Services\Interfaces\IDGenerate\IDGeneratorQueryServiceInterface;
 use App\Services\Interfaces\IDGenerate\IDGeneratorServiceInterface;
+use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class IDGeneratorService implements IDGeneratorServiceInterface
 {
+    /**
+     * @param IDGeneratorQueryService $queryService
+     */
+    private IDGeneratorQueryServiceInterface $queryService;
+
+    public function __construct(IDGeneratorQueryServiceInterface $queryService)
+    {
+        $this->queryService = $queryService;
+    }
 
     /**
      * @param string $prefix
@@ -71,6 +82,7 @@ class IDGeneratorService implements IDGeneratorServiceInterface
      * @param string $dob
      * @param Collection $currentIDs
      * @return string
+     * @throws Exception
      */
     public function generateStudentID(string $dob, Collection $currentIDs): string
     {
@@ -81,20 +93,26 @@ class IDGeneratorService implements IDGeneratorServiceInterface
         if ($rowCount > 0) {
             $prevID = $currentIDs->get($currentIDs->count() - 1);
             $prevPrefix = Str::substr($prevID,4, 4);
-            $counter = (int) Str::substr($prevID,7, 3);
+            $counter = (int) Str::substr($prevID,8, 3);
 
             $prevYear = Carbon::createFromFormat('Y', $prevPrefix)->year;
 
             if ($currentYear == $prevYear) {
                 if ($counter < 999) {
-                    $id = IDGenerateServiceInterface::STUDENT . $currentYear . (++$counter);
+                    if ($counter < 9) {
+                        $id = IDGenerateServiceInterface::STUDENT . $currentYear . '00' . (++$counter);
+                    } elseif ($counter < 99) {
+                        $id = IDGenerateServiceInterface::STUDENT . $currentYear . '0' . (++$counter);
+                    } else {
+                        $id = IDGenerateServiceInterface::STUDENT . $currentYear . (++$counter);
+                    }
                 } else {
-                    $id  = "Student ID creation limit is exceeded for the system in this year " . $dob;
+                    throw new Exception('Student ID creation limit is exceeded for the system in this year: ' . $dob);
                 }
             } else if ($currentYear > $prevYear) {
-                $id = IDGenerateServiceInterface::STUDENT . $currentYear + '001';
+                $id = IDGenerateServiceInterface::STUDENT . $currentYear . '001';
             } else if ($currentYear < $prevYear) {
-                generateStudentID($dob, IDGeneratorQueryService::getStudentIDsByDOB($dob));
+                $id = $this->generateStudentID($dob, $this->queryService->getStudentIDsByDOB($dob));
             }
 
         } else if ($rowCount == 0) {
