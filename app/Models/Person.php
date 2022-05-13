@@ -57,12 +57,19 @@ class Person extends Model
     /**
      * The attributes that should be cast.
      *
-     * @var array<string, string>
+     * @var array
      */
     protected $casts = [
-        'dob' => 'datetime:Y-m-d',
-        'joinedDate' => 'datetime:Y-m-d'
+        'dob' => 'timestamp:Y-m-d',
+        'joinedDate' => 'timestamp:Y-m-d'
     ];
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
     /**
      * Get the child personable model (student or employee).
