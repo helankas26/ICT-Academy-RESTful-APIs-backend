@@ -14,8 +14,7 @@ class IDGeneratorQueryService implements IDGeneratorQueryServiceInterface
      */
     public function getBranchIDs(): Collection
     {
-        return DB::table('branches')->pluck('branchID');
-
+        return DB::table('branches')->orderBy('branchID', 'asc')->pluck('branchID');
     }
 
     /**
@@ -23,7 +22,7 @@ class IDGeneratorQueryService implements IDGeneratorQueryServiceInterface
      */
     public function getStaffIDs(): Collection
     {
-        return DB::table('staff')->pluck('staffID');
+        return DB::table('staff')->orderBy('staffID', 'asc')->pluck('staffID');
     }
 
     /**
@@ -31,7 +30,7 @@ class IDGeneratorQueryService implements IDGeneratorQueryServiceInterface
      */
     public function getTeacherIDs(): Collection
     {
-        return DB::table('teachers')->pluck('teacherID');
+        return DB::table('teachers')->orderBy('teacherID', 'asc')->pluck('teacherID');
     }
 
     /**
@@ -39,7 +38,7 @@ class IDGeneratorQueryService implements IDGeneratorQueryServiceInterface
      */
     public function getUserIDs(): Collection
     {
-        return DB::table('users')->pluck('userID');
+        return DB::table('users')->orderBy('userID', 'asc')->pluck('userID');
     }
 
     /**
@@ -47,7 +46,7 @@ class IDGeneratorQueryService implements IDGeneratorQueryServiceInterface
      */
     public function getStudentIDs(): Collection
     {
-        return DB::table('students')->pluck('studentID');
+        return DB::table('students')->orderBy('studentID', 'asc')->pluck('studentID');
     }
 
     /**
@@ -57,7 +56,7 @@ class IDGeneratorQueryService implements IDGeneratorQueryServiceInterface
     public function getStudentIDsByDOB(string $dob): Collection
     {
         return DB::table('people')->where('personType', 'Student')
-            ->whereYear('dob', $dob)->pluck('personID');
+            ->whereYear('dob', $dob)->orderBy('personID', 'asc')->pluck('personID');
     }
 
     /**
@@ -65,7 +64,7 @@ class IDGeneratorQueryService implements IDGeneratorQueryServiceInterface
      */
     public function getCategoryIDs(): Collection
     {
-        return DB::table('categories')->pluck('categoryID');
+        return DB::table('categories')->orderBy('categoryID', 'asc')->pluck('categoryID');
     }
 
     /**
@@ -73,7 +72,7 @@ class IDGeneratorQueryService implements IDGeneratorQueryServiceInterface
      */
     public function getSubjectIDs(): Collection
     {
-        return DB::table('subjects')->pluck('subjectID');
+        return DB::table('subjects')->orderBy('subjectID', 'asc')->pluck('subjectID');
     }
 
     /**
@@ -81,7 +80,7 @@ class IDGeneratorQueryService implements IDGeneratorQueryServiceInterface
      */
     public function getClassIDs(): Collection
     {
-        return DB::table('classes')->pluck('classID');
+        return DB::table('classes')->orderBy('classID', 'asc')->pluck('classID');
     }
 
     /**
@@ -89,6 +88,6 @@ class IDGeneratorQueryService implements IDGeneratorQueryServiceInterface
      */
     public function getExamIDs(): Collection
     {
-        return DB::table('exams')->pluck('examID');
+        return DB::table('exams')->orderBy('examID', 'asc')->pluck('examID');
     }
 }
