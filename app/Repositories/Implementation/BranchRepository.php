@@ -16,6 +16,9 @@ class BranchRepository implements BranchRepositoryInterface
      */
     private IDGenerateServiceInterface $IDGenerateService;
 
+    /**
+     * @param IDGenerateServiceInterface $IDGenerateService
+     */
     public function __construct(IDGenerateServiceInterface $IDGenerateService)
     {
         $this->IDGenerateService = $IDGenerateService;

@@ -20,6 +20,9 @@ class StudentController extends Controller
      */
     private StudentRepositoryInterface $studentRepository;
 
+    /**
+     * @param StudentRepositoryInterface $studentRepository
+     */
     public function __construct(StudentRepositoryInterface $studentRepository)
     {
         $this->studentRepository = $studentRepository;
@@ -33,9 +36,9 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         $request->validate(['status' => ['required', 'string', 'max:10',
-            Rule::in(['Active', 'Past', 'Deactivate'])]]);
+            Rule::in(['Active', 'Past'])]]);
 
-        $students  = $this->studentRepository->getAllStudents($request);
+        $students = $this->studentRepository->getAllStudents($request);
 
         return new StudentCollection($students);
     }
@@ -53,7 +56,6 @@ class StudentController extends Controller
         DB::statement('SET foreign_key_checks = 1;');
 
         return new StudentResource($created);
-
     }
 
     /**

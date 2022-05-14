@@ -18,6 +18,9 @@ class BranchController extends Controller
      */
     private BranchRepositoryInterface $branchRepository;
 
+    /**
+     * @param BranchRepositoryInterface $branchRepository
+     */
     public function __construct(BranchRepositoryInterface $branchRepository)
     {
         $this->branchRepository = $branchRepository;

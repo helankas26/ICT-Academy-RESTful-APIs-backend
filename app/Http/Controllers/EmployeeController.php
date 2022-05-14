@@ -60,13 +60,13 @@ class EmployeeController extends Controller
      * Display the specified resource.
      *
      * @param Employee $employee
-     * @return EmployeeResource
+     * @return EmployeeCollection
      */
     public function show(Employee $employee)
     {
         $employee = $this->employeeRepository->getEmployeeById($employee);
 
-        return new EmployeeResource($employee);
+        return new EmployeeCollection($employee);
     }
 
     /**

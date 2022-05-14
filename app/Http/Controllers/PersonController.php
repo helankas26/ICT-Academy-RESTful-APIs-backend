@@ -19,6 +19,9 @@ class PersonController extends Controller
      */
     private PersonRepositoryInterface $personRepository;
 
+    /**
+     * @param PersonRepositoryInterface $personRepository
+     */
     public function __construct(PersonRepositoryInterface $personRepository)
     {
         $this->personRepository = $personRepository;

@@ -39,7 +39,7 @@ class StorePersonRequest extends FormRequest
             'telNo' => ['required', 'string', 'size:10'],
             'address' => ['required', 'string', 'min:6', 'max:150'],
             'email' => ['required', 'email', 'max:50'],
-            'status' => ['required', Rule::in(['Active', 'Past']), 'string', 'max:10'],
+            'status' => ['required', Rule::in(['Active', 'Past', 'Deactivate']), 'string', 'max:10'],
             'joinedDate' => ['required', 'date']
         ];
     }

@@ -10,6 +10,7 @@ use App\Services\Interfaces\IDGenerate\IDGenerateServiceInterface;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class StudentRepository implements StudentRepositoryInterface
 {
@@ -18,6 +19,9 @@ class StudentRepository implements StudentRepositoryInterface
      */
     private IDGenerateServiceInterface $IDGenerateService;
 
+    /**
+     * @param IDGenerateServiceInterface $IDGenerateService
+     */
     public function __construct(IDGenerateServiceInterface $IDGenerateService)
     {
         $this->IDGenerateService = $IDGenerateService;
@@ -45,6 +49,7 @@ class StudentRepository implements StudentRepositoryInterface
     /**
      * @param StoreStudentRequest $request
      * @return mixed
+     * @throws Throwable
      */
     public function createStudent(StoreStudentRequest $request)
     {
@@ -124,6 +129,7 @@ class StudentRepository implements StudentRepositoryInterface
      * @param Student $student
      * @return mixed
      * @throws Exception
+     * @throws Throwable
      */
     public function forceDeleteStudent(Student $student)
     {
