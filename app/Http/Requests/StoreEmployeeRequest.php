@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreEmployeeRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StoreEmployeeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +25,8 @@ class StoreEmployeeRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => ['required', Rule::in(['Mr.', 'Miss.', 'Mrs.', 'Ms.']), 'string', 'max:5'],
+            'nic' => ['required', 'string', 'alpha_num', 'min:10', 'max:12']
         ];
     }
 }

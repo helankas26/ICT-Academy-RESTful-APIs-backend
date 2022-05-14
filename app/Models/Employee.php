@@ -49,6 +49,13 @@ class Employee extends Model
     public $timestamps = false;
 
     /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
      * Get the user associated with the employee.
      */
     public function user(): HasOne
@@ -77,6 +84,6 @@ class Employee extends Model
      */
     public function person(): MorphOne
     {
-        return $this->morphOne(Person::class, 'personable');
+        return $this->morphOne(Person::class, 'personable', 'personType', 'personID');
     }
 }

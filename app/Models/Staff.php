@@ -48,6 +48,13 @@ class Staff extends Model
     public $timestamps = false;
 
     /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
      * Get the fees handled by staff.
      */
     public function fees(): HasMany
@@ -84,6 +91,6 @@ class Staff extends Model
      */
     public function employee(): MorphOne
     {
-        return $this->morphOne(Employee::class, 'employable');
+        return $this->morphOne(Employee::class, 'employable', 'employeeType', 'employeeID');
     }
 }

@@ -2,53 +2,159 @@
 
 namespace App\Repositories\Implementation;
 
+use App\Http\Requests\StoreStaffRequest;
+use App\Http\Requests\UpdateStaffRequest;
+use App\Models\Staff;
 use App\Repositories\Interfaces\StaffRepositoryInterface;
+use App\Services\Interfaces\IDGenerate\IDGenerateServiceInterface;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class StaffRepository implements StaffRepositoryInterface
 {
+    /**
+     * @var IDGenerateServiceInterface
+     */
+    private IDGenerateServiceInterface $IDGenerateService;
 
     /**
-     * @return mixed
+     * @param IDGenerateServiceInterface $IDGenerateService
      */
-    public function getAllStaffs()
+    public function __construct(IDGenerateServiceInterface $IDGenerateService)
     {
-        // TODO: Implement getAllStaffs() method.
+        $this->IDGenerateService = $IDGenerateService;
     }
 
     /**
-     * @param array $request
+     * @param Request $request
      * @return mixed
+     * @throws Exception
      */
-    public function createStaff(array $request)
+    public function getAllStaffs(Request $request)
     {
-        // TODO: Implement createStaff() method.
+        $staffs = Staff::query()->with(['employee', 'employee.person'])
+            ->join('employees', 'staff.staffID', 'employees.employeeID')
+            ->join('people', 'employees.employeeID', 'people.personID')
+            ->where('people.status', data_get($request, 'status'))
+            ->get();
+
+        if ($staffs->isEmpty()){
+            throw new Exception('Failed to retrieve Staff');
+        }
+
+        return $staffs;
     }
 
     /**
-     * @param $staff
+     * @param StoreStaffRequest $request
      * @return mixed
+     * @throws Throwable
      */
-    public function getStaffById($staff)
+    public function createStaff(StoreStaffRequest $request)
     {
-        // TODO: Implement getStaffById() method.
+        return DB::transaction( function () use ($request){
+
+            DB::statement('SET foreign_key_checks = 0;');
+
+            $staff = Staff::query()->create([
+                'staffID' => $this->IDGenerateService->staffID(),
+                'branchID' => data_get($request, 'branchID'),
+            ]);
+
+            $staff->employee()->create([
+                'nic' => data_get($request, 'nic'),
+                'title' => data_get($request, 'title'),
+            ]);
+
+            $staff->employee->person()->create([
+                'firstName' => data_get($request, 'firstName'),
+                'lastName' => data_get($request, 'lastName'),
+                'dob' => data_get($request, 'dob'),
+                'sex' => data_get($request, 'sex'),
+                'telNo' => data_get($request, 'telNo'),
+                'address' => data_get($request, 'address'),
+                'email' => data_get($request, 'email'),
+                'status' => data_get($request, 'status'),
+                'joinedDate' => data_get($request, 'joinedDate'),
+            ]);
+
+            DB::statement('SET foreign_key_checks = 1;');
+
+            return $staff;
+        });
     }
 
     /**
-     * @param array $request
-     * @param $staff
+     * @param Staff $staff
      * @return mixed
      */
-    public function updateStaff(array $request, $staff)
+    public function getStaffById(Staff $staff)
     {
-        // TODO: Implement updateStaff() method.
+        return Staff::query()->find($staff);
     }
 
     /**
-     * @param $staff
+     * @param UpdateStaffRequest $request
+     * @param Staff $staff
      * @return mixed
+     * @throws Throwable
      */
-    public function forceDeleteStaff($staff)
+    public function updateStaff(UpdateStaffRequest $request, Staff $staff)
     {
-        // TODO: Implement forceDeleteStaff() method.
+        return DB::transaction(function () use ($request, $staff){
+
+            $staff->update([
+                'branchID' => data_get($request, 'branchID'),
+            ]);
+
+            $staff->employee->update([
+                'nic' => data_get($request, 'nic'),
+                'title' => data_get($request, 'title'),
+            ]);
+
+            $updated = $staff->employee->person->update([
+                'firstName' => data_get($request, 'firstName'),
+                'lastName' => data_get($request, 'lastName'),
+                'dob' => data_get($request, 'dob'),
+                'sex' => data_get($request, 'sex'),
+                'telNo' => data_get($request, 'telNo'),
+                'address' => data_get($request, 'address'),
+                'email' => data_get($request, 'email'),
+                'status' => data_get($request, 'status'),
+                'joinedDate' => data_get($request, 'joinedDate'),
+            ]);
+
+            if (!$updated){
+                throw new Exception('Failed to update Staff: ' . $staff->staffID);
+            }
+
+            return $staff;
+        });
+    }
+
+    /**
+     * @param Staff $staff
+     * @return mixed
+     * @throws Exception
+     * @throws Throwable
+     */
+    public function forceDeleteStaff(Staff $staff)
+    {
+        return DB::transaction(function () use ($staff){
+
+            $staff->delete();
+
+            $staff->employee->delete();
+
+            $deleted = $staff->employee->person->delete();
+
+            if (!$deleted) {
+                throw new Exception('Failed to delete Staff: ' . $staff->staffID);
+            }
+
+            return $deleted;
+        });
     }
 }

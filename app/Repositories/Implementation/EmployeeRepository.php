@@ -2,53 +2,96 @@
 
 namespace App\Repositories\Implementation;
 
+use App\Http\Requests\StoreEmployeeRequest;
+use App\Http\Requests\UpdateEmployeeRequest;
+use App\Models\Employee;
 use App\Repositories\Interfaces\EmployeeRepositoryInterface;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class EmployeeRepository implements EmployeeRepositoryInterface
 {
-
     /**
+     * @param Request $request
      * @return mixed
+     * @throws Exception
      */
-    public function getAllEmployees()
+    public function getAllEmployees(Request $request)
     {
-        // TODO: Implement getAllEmployees() method.
+        $employees = Employee::query()->with(['employable', 'person'])
+            ->join('staff', 'employees.employeeID', 'staff.staffID')
+            ->join('people', 'employees.employeeID', 'people.personID')
+            ->where('people.status', data_get($request, 'status'))
+            ->get();
+
+        if ($employees->isEmpty()){
+            throw new Exception('Failed to retrieve Employee');
+        }
+
+        return $employees;
     }
 
     /**
-     * @param array $request
+     * @param StoreEmployeeRequest $request
      * @return mixed
+     * @throws Exception
      */
-    public function createEmployee(array $request)
+    public function createEmployee(StoreEmployeeRequest $request)
     {
-        // TODO: Implement createEmployee() method.
+        throw new Exception('The HTTP request cannot be handled by the server.Not Implemented and Under Construction');
     }
 
     /**
-     * @param $employee
+     * @param Employee $employee
      * @return mixed
      */
-    public function getEmployeeById($employee)
+    public function getEmployeeById(Employee $employee)
     {
-        // TODO: Implement getEmployeeById() method.
+        return Employee::query()->find($employee);
     }
 
     /**
-     * @param array $request
-     * @param $employee
+     * @param UpdateEmployeeRequest $request
+     * @param Employee $employee
      * @return mixed
+     * @throws Exception
      */
-    public function updateEmployee(array $request, $employee)
+    public function updateEmployee(UpdateEmployeeRequest $request, Employee $employee)
     {
-        // TODO: Implement updateEmployee() method.
+        $updated = $employee->update([
+            'nic' => data_get($request, 'nic'),
+            'title' => data_get($request, 'title'),
+        ]);
+
+        if (!$updated){
+            throw new Exception('Failed to update Employee: ' . $employee->employeeID);
+        }
+
+        return $employee;
     }
 
     /**
-     * @param $employee
+     * @param Employee $employee
      * @return mixed
+     * @throws Exception
+     * @throws Throwable
      */
-    public function forceDeleteEmployee($employee)
+    public function forceDeleteEmployee(Employee $employee)
     {
-        // TODO: Implement forceDeleteEmployee() method.
+        return DB::transaction(function () use ($employee){
+
+            $employee->delete();
+
+            $deleted = $employee->person->delete();
+
+            if (!$deleted){
+                throw new Exception('Failed to delete Employee: ' . $employee->employeeID);
+            }
+
+            return $deleted;
+
+        });
     }
 }
