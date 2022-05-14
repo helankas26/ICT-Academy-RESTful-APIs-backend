@@ -2,64 +2,101 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\EmployeeCollection;
+use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
+use App\Repositories\Interfaces\EmployeeRepositoryInterface;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
 {
     /**
+     * @var EmployeeRepositoryInterface
+     */
+    private EmployeeRepositoryInterface $employeeRepository;
+
+    /**
+     * @param EmployeeRepositoryInterface $employeeRepository
+     */
+    public function __construct(EmployeeRepositoryInterface $employeeRepository)
+    {
+        $this->employeeRepository = $employeeRepository;
+    }
+
+    /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return EmployeeCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $request->validate(['status' => ['required', 'string', 'max:10',
+            Rule::in(['Active', 'Deactivate'])]]);
+
+        $employees = $this->employeeRepository->getAllEmployees($request);
+
+        return new EmployeeCollection($employees);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreEmployeeRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreEmployeeRequest $request
+     * @return EmployeeResource
      */
     public function store(StoreEmployeeRequest $request)
     {
-        //
+        $created = $this->employeeRepository->createEmployee($request);
+
+        return new EmployeeResource($created);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Http\Response
+     * @param Employee $employee
+     * @return EmployeeResource
      */
     public function show(Employee $employee)
     {
-        //
+        $employee = $this->employeeRepository->getEmployeeById($employee);
+
+        return new EmployeeResource($employee);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateEmployeeRequest  $request
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Http\Response
+     * @param UpdateEmployeeRequest $request
+     * @param Employee $employee
+     * @return EmployeeResource
      */
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
-        //
+        $updated = $this->employeeRepository->updateEmployee($request, $employee);
+
+        return new EmployeeResource($updated);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Http\Response
+     * @param Employee $employee
+     * @return JsonResponse
      */
     public function destroy(Employee $employee)
     {
-        //
+        $deleted = $this->employeeRepository->forceDeleteEmployee($employee);
+
+        return new JsonResponse([
+            'success' => $deleted,
+            'status' => 'deleted',
+            'data' => new EmployeeResource($employee),
+        ]);
     }
 }
