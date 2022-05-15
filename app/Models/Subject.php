@@ -47,6 +47,13 @@ class Subject extends Model
     public $timestamps = false;
 
     /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
      * Get the category that owns the subject.
      */
     public function category(): BelongsTo

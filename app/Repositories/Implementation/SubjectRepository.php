@@ -2,53 +2,100 @@
 
 namespace App\Repositories\Implementation;
 
+use App\Http\Requests\StoreSubjectRequest;
+use App\Http\Requests\UpdateSubjectRequest;
+use App\Models\Subject;
 use App\Repositories\Interfaces\SubjectRepositoryInterface;
+use App\Services\Interfaces\IDGenerate\IDGenerateServiceInterface;
+use Exception;
 
 class SubjectRepository implements SubjectRepositoryInterface
 {
+    /**
+     * @var IDGenerateServiceInterface
+     */
+    private IDGenerateServiceInterface $IDGenerateService;
+
+    /**
+     * @param IDGenerateServiceInterface $IDGenerateService
+     */
+    public function __construct(IDGenerateServiceInterface $IDGenerateService)
+    {
+        $this->IDGenerateService = $IDGenerateService;
+    }
 
     /**
      * @return mixed
+     * @throws Exception
      */
     public function getAllSubjects()
     {
-        // TODO: Implement getAllSubjects() method.
+        $subjects = Subject::query()->get();
+
+        if ($subjects->isEmpty()){
+            throw new Exception('Failed to retrieve Subject');
+        }
+
+        return $subjects;
     }
 
     /**
-     * @param array $request
+     * @param StoreSubjectRequest $request
      * @return mixed
      */
-    public function createSubject(array $request)
+    public function createSubject(StoreSubjectRequest $request)
     {
-        // TODO: Implement createSubject() method.
+        return Subject::query()->create([
+            'subjectID' => $this->IDGenerateService->subjectID(),
+            'subjectName' => data_get($request, 'subjectName'),
+            'medium' => data_get($request, 'medium'),
+            'categoryID' => data_get($request, 'categoryID'),
+        ]);
     }
 
     /**
-     * @param $subject
+     * @param Subject $subject
      * @return mixed
      */
-    public function getSubjectById($subject)
+    public function getSubjectById(Subject $subject)
     {
-        // TODO: Implement getSubjectById() method.
+        return Subject::query()->find($subject);
     }
 
     /**
-     * @param array $request
-     * @param $subject
+     * @param UpdateSubjectRequest $request
+     * @param Subject $subject
      * @return mixed
+     * @throws Exception
      */
-    public function updateSubject(array $request, $subject)
+    public function updateSubject(UpdateSubjectRequest $request, Subject $subject)
     {
-        // TODO: Implement updateSubject() method.
+        $updated = $subject->update([
+            'subjectName' => data_get($request, 'subjectName'),
+            'medium' => data_get($request, 'medium'),
+            'categoryID' => data_get($request, 'categoryID'),
+        ]);
+
+        if (!$updated){
+            throw new Exception('Failed to update Subject: ' . $subject->subjectID);
+        }
+
+        return $subject;
     }
 
     /**
-     * @param $subject
+     * @param Subject $subject
      * @return mixed
+     * @throws Exception
      */
-    public function forceDeleteSubject($subject)
+    public function forceDeleteSubject(Subject $subject)
     {
-        // TODO: Implement forceDeleteSubject() method.
+        $deleted = $subject->delete();
+
+        if (!$deleted){
+            throw new Exception('Failed to delete Subject: ' . $subject->subjectID);
+        }
+
+        return $deleted;
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class SubjectCollection extends ResourceCollection
+class SubjectResource extends JsonResource
 {
     /**
      * The "data" wrapper that should be applied.
@@ -15,7 +15,7 @@ class SubjectCollection extends ResourceCollection
     public static $wrap = 'subject';
 
     /**
-     * Transform the resource collection into an array.
+     * Transform the resource into an array.
      *
      * @param Request $request
      * @return array
@@ -23,8 +23,10 @@ class SubjectCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' => SubjectResource::collection($this->collection),
-            'meta' => ['subject_count' => $this->collection->count()],
+            'subjectID' => $this->subjectID,
+            'subjectName' => $this->subjectName,
+            'medium' => $this->medium,
+            'category' => $this->category,
         ];
     }
 

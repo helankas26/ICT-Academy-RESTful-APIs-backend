@@ -3,9 +3,17 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreSubjectRequest extends FormRequest
 {
+    /**
+     * Indicates if the validator should stop on the first rule failure.
+     *
+     * @var bool
+     */
+    protected $stopOnFirstFailure = true;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +21,7 @@ class StoreSubjectRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +32,9 @@ class StoreSubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'subjectName' => ['required', 'string', 'unique:App\Models\Subject,subjectName', 'min:4', 'max:20'],
+            'medium' => ['required', Rule::in(['Sinhala', 'English', 'Tamil']), 'string', 'max:7'],
+            'categoryID' => ['required', Rule::exists('categories', 'categoryID'), 'string', 'size:8']
         ];
     }
 }
