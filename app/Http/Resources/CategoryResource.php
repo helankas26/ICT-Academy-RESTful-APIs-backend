@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class CategoryCollection extends ResourceCollection
+class CategoryResource extends JsonResource
 {
     /**
      * The "data" wrapper that should be applied.
@@ -15,7 +15,7 @@ class CategoryCollection extends ResourceCollection
     public static $wrap = 'category';
 
     /**
-     * Transform the resource collection into an array.
+     * Transform the resource into an array.
      *
      * @param Request $request
      * @return array
@@ -23,8 +23,8 @@ class CategoryCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' => CategoryResource::collection($this->collection),
-            'meta' => ['category_count' => $this->collection->count()],
+            'categoryID' => $this->categoryID,
+            'categoryName' => $this->categoryName,
         ];
     }
 

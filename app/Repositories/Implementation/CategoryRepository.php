@@ -2,53 +2,96 @@
 
 namespace App\Repositories\Implementation;
 
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
+use App\Models\Category;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use App\Services\Interfaces\IDGenerate\IDGenerateServiceInterface;
+use Exception;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
+    /**
+     * @var IDGenerateServiceInterface
+     */
+    private IDGenerateServiceInterface $IDGenerateService;
+
+    /**
+     * @param IDGenerateServiceInterface $IDGenerateService
+     */
+    public function __construct(IDGenerateServiceInterface $IDGenerateService)
+    {
+        $this->IDGenerateService = $IDGenerateService;
+    }
 
     /**
      * @return mixed
+     * @throws Exception
      */
     public function getAllCategories()
     {
-        // TODO: Implement getAllCategories() method.
+        $categories = Category::query()->orderBy('categoryID', 'asc')->get();
+
+        if ($categories->isEmpty()){
+            throw new Exception('Failed to retrieve Category');
+        }
+
+        return $categories;
     }
 
     /**
-     * @param array $request
+     * @param StoreCategoryRequest $request
      * @return mixed
      */
-    public function createCategory(array $request)
+    public function createCategory(StoreCategoryRequest $request)
     {
-        // TODO: Implement createCategory() method.
+        return Category::query()->create([
+            'categoryID' => $this->IDGenerateService->categoryID(),
+            'categoryName' => data_get($request, 'categoryName'),
+        ]);
     }
 
     /**
-     * @param $category
+     * @param Category $category
      * @return mixed
      */
-    public function getCategoryById($category)
+    public function getCategoryById(Category $category)
     {
-        // TODO: Implement getCategoryById() method.
+        return Category::query()->find($category);
     }
 
     /**
-     * @param array $request
-     * @param $category
+     * @param UpdateCategoryRequest $request
+     * @param Category $category
      * @return mixed
+     * @throws Exception
      */
-    public function updateCategory(array $request, $category)
+    public function updateCategory(UpdateCategoryRequest $request, Category $category)
     {
-        // TODO: Implement updateCategory() method.
+        $updated = $category->update([
+            'categoryName' => data_get($request, 'categoryName'),
+        ]);
+
+        if (!$updated){
+            throw new Exception('Failed to update Category: ' . $category->categoryID);
+        }
+
+        return $category;
     }
 
     /**
-     * @param $category
+     * @param Category $category
      * @return mixed
+     * @throws Exception
      */
-    public function forceDeleteCategory($category)
+    public function forceDeleteCategory(Category $category)
     {
-        // TODO: Implement forceDeleteCategory() method.
+        $deleted = $category->delete();
+
+        if (!$deleted){
+            throw new Exception('Failed to delete Category: ' . $category->categoryID);
+        }
+
+        return $deleted;
     }
 }

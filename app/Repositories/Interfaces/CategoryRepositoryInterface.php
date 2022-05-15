@@ -2,11 +2,39 @@
 
 namespace App\Repositories\Interfaces;
 
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
+use App\Models\Category;
+
 interface CategoryRepositoryInterface
 {
+    /**
+     * @return mixed
+     */
     public function getAllCategories();
-    public function createCategory(array $request);
-    public function getCategoryById($category);
-    public function updateCategory(array $request, $category);
-    public function forceDeleteCategory($category);
+
+    /**
+     * @param StoreCategoryRequest $request
+     * @return mixed
+     */
+    public function createCategory(StoreCategoryRequest $request);
+
+    /**
+     * @param Category $category
+     * @return mixed
+     */
+    public function getCategoryById(Category $category);
+
+    /**
+     * @param UpdateCategoryRequest $request
+     * @param Category $category
+     * @return mixed
+     */
+    public function updateCategory(UpdateCategoryRequest $request, Category $category);
+
+    /**
+     * @param Category $category
+     * @return mixed
+     */
+    public function forceDeleteCategory(Category $category);
 }
