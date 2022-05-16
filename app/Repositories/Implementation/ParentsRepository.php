@@ -2,53 +2,88 @@
 
 namespace App\Repositories\Implementation;
 
+use App\Http\Requests\StoreParentsRequest;
+use App\Http\Requests\UpdateParentsRequest;
+use App\Models\Parents;
 use App\Repositories\Interfaces\ParentsRepositoryInterface;
+use Exception;
 
 class ParentsRepository implements ParentsRepositoryInterface
 {
-
     /**
      * @return mixed
+     * @throws Exception
      */
     public function getAllParents()
     {
-        // TODO: Implement getAllParents() method.
+        $parents = Parents::query()->get();
+
+        if ($parents->isEmpty()){
+            throw new Exception('Failed to retrieve Parent');
+        }
+
+        return $parents;
     }
 
     /**
-     * @param array $request
+     * @param StoreParentsRequest $request
      * @return mixed
      */
-    public function createParent(array $request)
+    public function createParent(StoreParentsRequest $request)
     {
-        // TODO: Implement createParent() method.
+        return Parents::query()->create([
+            'studentID' => data_get($request, 'studentID'),
+            'title' => data_get($request, 'title'),
+            'parentName' => data_get($request, 'parentName'),
+            'parentType' =>  data_get($request, 'parentType'),
+            'telNo' => data_get($request, 'telNo'),
+        ]);
     }
 
     /**
-     * @param $parent
+     * @param Parents $parent
      * @return mixed
      */
-    public function getParentById($parent)
+    public function getParentById(Parents $parent)
     {
-        // TODO: Implement getParentById() method.
+        return Parents::query()->find($parent);
     }
 
     /**
-     * @param array $request
-     * @param $parent
+     * @param UpdateParentsRequest $request
+     * @param Parents $parent
      * @return mixed
+     * @throws Exception
      */
-    public function updateParent(array $request, $parent)
+    public function updateParent(UpdateParentsRequest $request, Parents $parent)
     {
-        // TODO: Implement updateParent() method.
+        $updated = $parent->update([
+            'title' => data_get($request, 'title', $parent->title),
+            'parentName' => data_get($request, 'parentName',  $parent->parentName),
+            'parentType' =>  data_get($request, 'parentType' , $parent->parentType),
+            'telNo' => data_get($request, 'telNo', $parent->telNo),
+        ]);
+
+        if (!$updated){
+            throw new Exception('Failed to update Category: ' . $parent->studentID);
+        }
+
+        return $parent;
     }
 
     /**
-     * @param $parent
+     * @param Parents $parent
      * @return mixed
+     * @throws Exception
      */
-    public function forceDeleteParent($parent)
+    public function forceDeleteParent(Parents $parent)
     {
-        // TODO: Implement forceDeleteParent() method.
+        $deleted = $parent->delete();
+
+        if (!$deleted){
+            throw new Exception('Failed to delete Category: ' . $parent->studentID);
+        }
+
+        return $deleted;
     }
 }

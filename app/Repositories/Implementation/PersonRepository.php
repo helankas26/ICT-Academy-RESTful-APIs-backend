@@ -5,6 +5,7 @@ namespace App\Repositories\Implementation;
 use App\Http\Requests\StorePersonRequest;
 use App\Http\Requests\UpdatePersonRequest;
 use App\Models\Employee;
+use App\Models\Parents;
 use App\Models\Person;
 use App\Repositories\Interfaces\PersonRepositoryInterface;
 use Exception;
@@ -22,7 +23,8 @@ class PersonRepository implements PersonRepositoryInterface
     {
         $people = Person::query()->with(['personable' => function (MorphTo $morphTo) {
                 $morphTo->morphWith([
-                    Employee::class => ['employable']
+                    Employee::class => ['employable'],
+                    Parents::class => ['parent']
                 ]);
             }])->where('people.status', data_get($request, 'status'))->get();
 

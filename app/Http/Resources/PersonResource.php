@@ -57,7 +57,12 @@ class PersonResource extends JsonResource
             'email' => $this->email,
             'status' => $this->status,
             'joinedDate' => $this->joinedDate,
-            $this->personType => $this->personable,
+            $this->personType => [
+                'studentID' => $this->personable->studentID,
+                'grade' => $this->personable->grade,
+                'branchID' => $this->personable->branchID,
+                'parent' => $this->personable->parent,
+            ],
         ];
     }
 

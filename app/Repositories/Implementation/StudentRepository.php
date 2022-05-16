@@ -34,7 +34,7 @@ class StudentRepository implements StudentRepositoryInterface
      */
     public function getAllStudents(Request $request)
     {
-        $students =  Student::query()->with('person')
+        $students =  Student::query()->with('person', 'parent')
             ->join('people', 'students.studentID', 'people.personID')
             ->where('people.status', data_get($request, 'status'))
             ->get();
@@ -75,6 +75,13 @@ class StudentRepository implements StudentRepositoryInterface
                 'joinedDate' => data_get($request, 'joinedDate'),
             ]);
 
+            $student->parent()->create([
+                'title' => data_get($request, 'title'),
+                'parentName' => data_get($request, 'parentName'),
+                'parentType' => data_get($request, 'parentType'),
+                'telNo' => data_get($request, 'parenTelNo'),
+            ]);
+
             DB::statement('SET foreign_key_checks = 1;');
 
             return $student;
@@ -101,12 +108,12 @@ class StudentRepository implements StudentRepositoryInterface
     {
         return DB::transaction(function () use ($request, $student){
 
-             $student->update([
+            $student->update([
                 'grade' => data_get($request, 'grade', $student->grade),
                 'branchID' => data_get($request, 'branchID', $student->branchID),
             ]);
 
-            $updated = $student->person->update([
+            $student->person->update([
                 'firstName' => data_get($request, 'firstName', $student->person->firstName),
                 'lastName' => data_get($request, 'lastName', $student->person->lastName),
                 'dob' => data_get($request, 'dob', $student->person->dob),
@@ -116,6 +123,13 @@ class StudentRepository implements StudentRepositoryInterface
                 'email' => data_get($request, 'email', $student->person->email),
                 'status' => data_get($request, 'status', $student->person->status),
                 'joinedDate' => data_get($request, 'joinedDate', $student->person->joinedDate),
+            ]);
+
+            $updated = $student->parent->update([
+                'title' => data_get($request, 'title', $student->person->title),
+                'parentName' => data_get($request, 'parentName', $student->person->parentName),
+                'parentType' => data_get($request, 'parentType', $student->person->parentType),
+                'telNo' => data_get($request, 'parenTelNo', $student->person->parenTelNo),
             ]);
 
             if (!$updated){
@@ -135,6 +149,8 @@ class StudentRepository implements StudentRepositoryInterface
     public function forceDeleteStudent(Student $student)
     {
         return DB::transaction(function () use ($student) {
+
+            $student->parent->delete();
 
             $student->delete();
 

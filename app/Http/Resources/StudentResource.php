@@ -34,7 +34,16 @@ class StudentResource extends JsonResource
             'email' => $this->person->email,
             'status' => $this->person->status,
             'joinedDate' => $this->person->joinedDate,
-            'branchID' => $this->branchID,
+            'branch' => [
+                'branchID' => $this->branch->branchID,
+                'branchName' => $this->branch->branchName,
+            ],
+            'parent' => [
+                'title' => $this->parent->title,
+                'parentName' => $this->parent->parentName,
+                'parentType' => $this->parent->parentType,
+                'parenTelNo' => $this->parent->telNo,
+            ],
         ];
     }
 

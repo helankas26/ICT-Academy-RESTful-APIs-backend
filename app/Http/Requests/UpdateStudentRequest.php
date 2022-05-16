@@ -42,7 +42,11 @@ class UpdateStudentRequest extends FormRequest
             'email' => ['required', 'email', 'max:50'],
             'status' => ['required', Rule::in(['Active', 'Past', 'Deactivate']), 'string', 'max:10'],
             'joinedDate' => ['required', 'date'],
-            'branchID' => ['required', Rule::exists('branches', 'branchID'), 'string', 'size:8']
+            'branchID' => ['required', Rule::exists('branches', 'branchID'), 'string', 'size:8'],
+            'title' => ['required', Rule::in(['Mr.', 'Mrs.']), 'string', 'max:5'],
+            'parentName' => ['required', 'string', 'regex:/^[a-zA-Z\s\.]+$/i', 'min:4', 'max:50'],
+            'parentType' => ['required', Rule::in(['Father', 'Mother', 'Guardian']), 'string', 'max:10'],
+            'parenTelNo' => ['required', 'string', 'size:10']
         ];
     }
 }
