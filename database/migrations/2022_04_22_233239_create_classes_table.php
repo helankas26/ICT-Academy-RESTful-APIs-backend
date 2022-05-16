@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('room', 15);
             $table->decimal('classFee', 7,2);
             $table->string('feeType', 8);
-            $table->char('status', 6)->default('Active');
+            $table->char('status', 10)->default('Active');
             $table->char('subjectID', 8);
             $table->char('categoryID', 8);
             $table->char('teacherID', 11);

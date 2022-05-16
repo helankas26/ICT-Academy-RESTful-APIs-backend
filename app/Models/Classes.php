@@ -48,6 +48,13 @@ class Classes extends Model
     public $timestamps = false;
 
     /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
      * The model's default values for attributes.
      *
      * @var array
@@ -62,10 +69,10 @@ class Classes extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'startTime' => 'datetime:H:i',
-        'endTime' => 'datetime:H:i',
+        'startTime' => 'timestamp:h:i A',
+        'endTime' => 'timestamp:h:i A',
         'grade' => 'integer',
-        'classFee' => 'decimal:9'
+        'classFee' => 'decimal:2'
     ];
 
     /**

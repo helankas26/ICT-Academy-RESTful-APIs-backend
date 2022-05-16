@@ -2,53 +2,137 @@
 
 namespace App\Repositories\Implementation;
 
+use App\Http\Requests\StoreClassesRequest;
+use App\Http\Requests\UpdateClassesRequest;
+use App\Models\Classes;
 use App\Repositories\Interfaces\ClassesRepositoryInterface;
+use App\Services\Interfaces\IDGenerate\IDGenerateServiceInterface;
+use Exception;
+use Illuminate\Http\Request;
 
 class ClassesRepository implements ClassesRepositoryInterface
 {
+    /**
+     * @var IDGenerateServiceInterface
+     */
+    private IDGenerateServiceInterface $IDGenerateService;
 
     /**
-     * @return mixed
+     * @param IDGenerateServiceInterface $IDGenerateService
      */
-    public function getAllClasses()
+    public function __construct(IDGenerateServiceInterface $IDGenerateService)
     {
-        // TODO: Implement getAllClasses() method.
+        $this->IDGenerateService = $IDGenerateService;
     }
 
     /**
-     * @param array $request
+     * @param Request $request
      * @return mixed
+     * @throws Exception
      */
-    public function createClass(array $request)
+    public function getAllClasses(Request $request)
     {
-        // TODO: Implement createClass() method.
+        if ($request->feeType == null) {
+            $classes = Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+                ->where('status', data_get($request, 'status'))
+                ->get();
+
+            if ($classes->isEmpty()){
+                throw new Exception('Failed to retrieve Class');
+            }
+
+            return $classes;
+        }
+
+        $classes = Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+        ->where('status', data_get($request, 'status'))
+        ->where('feeType', data_get($request, 'feeType'))
+        ->get();
+
+        if ($classes->isEmpty()){
+            throw new Exception('Failed to retrieve Class');
+        }
+
+        return $classes;
     }
 
     /**
-     * @param $class
+     * @param StoreClassesRequest $request
      * @return mixed
      */
-    public function getClassById($class)
+    public function createClass(StoreClassesRequest $request)
     {
-        // TODO: Implement getClassById() method.
+        return Classes::query()->create([
+            'classID' => $this->IDGenerateService->classID(),
+            'className' => data_get($request, 'className'),
+            'Day' => data_get($request, 'Day'),
+            'startTime' => data_get($request, 'startTime'),
+            'endTime' => data_get($request, 'endTime'),
+            'grade' => data_get($request, 'grade'),
+            'room' => data_get($request, 'room'),
+            'classFee' => data_get($request, 'classFee'),
+            'feeType' => data_get($request, 'feeType'),
+            'status' => data_get($request, 'status'),
+            'subjectID' => data_get($request, 'subjectID'),
+            'categoryID' => data_get($request, 'categoryID'),
+            'teacherID' => data_get($request, 'teacherID'),
+            'branchID' => data_get($request, 'branchID'),
+        ]);
     }
 
     /**
-     * @param array $request
-     * @param $class
+     * @param Classes $class
      * @return mixed
      */
-    public function updateClass(array $request, $class)
+    public function getClassById(Classes $class)
     {
-        // TODO: Implement updateClass() method.
+        return Classes::query()->find($class);
     }
 
     /**
-     * @param $class
+     * @param UpdateClassesRequest $request
+     * @param Classes $class
      * @return mixed
+     * @throws Exception
      */
-    public function forceDeleteClass($class)
+    public function updateClass(UpdateClassesRequest $request, Classes $class)
     {
-        // TODO: Implement forceDeleteClass() method.
+        $updated = $class->update([
+            'className' => data_get($request, 'className', $class->className),
+            'Day' => data_get($request, 'Day', $class->Day),
+            'startTime' => data_get($request, 'startTime', $class->startTime),
+            'endTime' => data_get($request, 'endTime', $class->endTime),
+            'grade' => data_get($request, 'grade', $class->grade),
+            'room' => data_get($request, 'room', $class->room),
+            'classFee' => data_get($request, 'classFee', $class->classFee),
+            'feeType' => data_get($request, 'feeType', $class->feeType),
+            'status' => data_get($request, 'status', $class->status),
+            'subjectID' => data_get($request, 'subjectID', $class->subjectID),
+            'categoryID' => data_get($request, 'categoryID', $class->categoryID),
+            'teacherID' => data_get($request, 'teacherID', $class->teacherID),
+            'branchID' => data_get($request, 'branchID', $class->branchID),
+        ]);
+
+        if (!$updated){
+            throw new Exception('Failed to update Class: ' . $class->classID);
+        }
+
+        return $class;
+    }
+
+    /**
+     * @param Classes $class
+     * @return mixed
+     * @throws Exception
+     */
+    public function forceDeleteClass(Classes $class)
+    {
+        $deleted = $class->delete();
+
+        if (!$deleted){
+            throw new Exception('Failed to delete Class: ' . $class->classID);
+        }
+
+        return $deleted;
     }
 }
