@@ -106,24 +106,24 @@ class TeacherRepository implements TeacherRepositoryInterface
         return DB::transaction(function () use ($request, $teacher){
 
             $teacher->update([
-                'qualification' => data_get($request, 'qualification'),
+                'qualification' => data_get($request, 'qualification', $teacher->qualification),
             ]);
 
             $teacher->employee->update([
-                'nic' => data_get($request, 'nic'),
-                'title' => data_get($request, 'title'),
+                'nic' => data_get($request, 'nic', $teacher->employee->nic),
+                'title' => data_get($request, 'title', $teacher->employee->title),
             ]);
 
             $updated = $teacher->employee->person->update([
-                'firstName' => data_get($request, 'firstName'),
-                'lastName' => data_get($request, 'lastName'),
-                'dob' => data_get($request, 'dob'),
-                'sex' => data_get($request, 'sex'),
-                'telNo' => data_get($request, 'telNo'),
-                'address' => data_get($request, 'address'),
-                'email' => data_get($request, 'email'),
-                'status' => data_get($request, 'status'),
-                'joinedDate' => data_get($request, 'joinedDate'),
+                'firstName' => data_get($request, 'firstName', $teacher->employee->person->firstName),
+                'lastName' => data_get($request, 'lastName', $teacher->employee->person->lastName),
+                'dob' => data_get($request, 'dob', $teacher->employee->person->dob),
+                'sex' => data_get($request, 'sex', $teacher->employee->person->sex),
+                'telNo' => data_get($request, 'telNo', $teacher->employee->person->telNo),
+                'address' => data_get($request, 'address', $teacher->employee->person->address),
+                'email' => data_get($request, 'email', $teacher->employee->person->email),
+                'status' => data_get($request, 'status', $teacher->employee->person->status),
+                'joinedDate' => data_get($request, 'joinedDate', $teacher->employee->person->joinedDate),
             ]);
 
             if (!$updated){

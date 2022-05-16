@@ -61,8 +61,8 @@ class EmployeeRepository implements EmployeeRepositoryInterface
     public function updateEmployee(UpdateEmployeeRequest $request, Employee $employee)
     {
         $updated = $employee->update([
-            'nic' => data_get($request, 'nic'),
-            'title' => data_get($request, 'title'),
+            'nic' => data_get($request, 'nic', $employee->nic),
+            'title' => data_get($request, 'title', $employee->title),
         ]);
 
         if (!$updated){
@@ -91,7 +91,6 @@ class EmployeeRepository implements EmployeeRepositoryInterface
             }
 
             return $deleted;
-
         });
     }
 }

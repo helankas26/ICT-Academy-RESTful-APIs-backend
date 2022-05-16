@@ -71,9 +71,9 @@ class SubjectRepository implements SubjectRepositoryInterface
     public function updateSubject(UpdateSubjectRequest $request, Subject $subject)
     {
         $updated = $subject->update([
-            'subjectName' => data_get($request, 'subjectName'),
-            'medium' => data_get($request, 'medium'),
-            'categoryID' => data_get($request, 'categoryID'),
+            'subjectName' => data_get($request, 'subjectName', $subject->subjectName),
+            'medium' => data_get($request, 'medium', $subject->medium),
+            'categoryID' => data_get($request, 'categoryID', $subject->categoryID),
         ]);
 
         if (!$updated){

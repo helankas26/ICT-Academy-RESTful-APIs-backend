@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 interface PersonRepositoryInterface
 {
     /**
+     * @param Request $request
      * @return mixed
      */
     public function getAllPeople(Request $request);

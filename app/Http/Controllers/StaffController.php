@@ -28,7 +28,6 @@ class StaffController extends Controller
         $this->staffRepository = $staffRepository;
     }
 
-
     /**
      * Display a listing of the resource.
      *

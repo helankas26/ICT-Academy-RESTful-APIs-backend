@@ -8,8 +8,6 @@ use App\Models\Branch;
 
 interface BranchRepositoryInterface
 {
-
-
     /**
      * @return mixed
      */

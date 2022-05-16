@@ -69,7 +69,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function updateCategory(UpdateCategoryRequest $request, Category $category)
     {
         $updated = $category->update([
-            'categoryName' => data_get($request, 'categoryName'),
+            'categoryName' => data_get($request, 'categoryName', $category->categoryName),
         ]);
 
         if (!$updated){

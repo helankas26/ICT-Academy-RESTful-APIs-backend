@@ -30,6 +30,7 @@ class PersonController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return PersonCollection
      */
     public function index(Request $request)

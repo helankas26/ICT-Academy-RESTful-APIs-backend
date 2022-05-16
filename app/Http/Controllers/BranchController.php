@@ -12,7 +12,6 @@ use Illuminate\Http\JsonResponse;
 
 class BranchController extends Controller
 {
-
     /**
      * @var BranchRepositoryInterface
      */

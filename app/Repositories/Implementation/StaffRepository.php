@@ -106,24 +106,24 @@ class StaffRepository implements StaffRepositoryInterface
         return DB::transaction(function () use ($request, $staff){
 
             $staff->update([
-                'branchID' => data_get($request, 'branchID'),
+                'branchID' => data_get($request, 'branchID', $staff->branchID),
             ]);
 
             $staff->employee->update([
-                'nic' => data_get($request, 'nic'),
-                'title' => data_get($request, 'title'),
+                'nic' => data_get($request, 'nic',$staff->employee->nic),
+                'title' => data_get($request, 'title', $staff->employee->title),
             ]);
 
             $updated = $staff->employee->person->update([
-                'firstName' => data_get($request, 'firstName'),
-                'lastName' => data_get($request, 'lastName'),
-                'dob' => data_get($request, 'dob'),
-                'sex' => data_get($request, 'sex'),
-                'telNo' => data_get($request, 'telNo'),
-                'address' => data_get($request, 'address'),
-                'email' => data_get($request, 'email'),
-                'status' => data_get($request, 'status'),
-                'joinedDate' => data_get($request, 'joinedDate'),
+                'firstName' => data_get($request, 'firstName', $staff->employee->person->firstName),
+                'lastName' => data_get($request, 'lastName', $staff->employee->person->lastName),
+                'dob' => data_get($request, 'dob', $staff->employee->person->dob),
+                'sex' => data_get($request, 'sex', $staff->employee->person->sex),
+                'telNo' => data_get($request, 'telNo', $staff->employee->person->telNo),
+                'address' => data_get($request, 'address', $staff->employee->person->address),
+                'email' => data_get($request, 'email', $staff->employee->person->email),
+                'status' => data_get($request, 'status', $staff->employee->person->status),
+                'joinedDate' => data_get($request, 'joinedDate', $staff->employee->person->joinedDate),
             ]);
 
             if (!$updated){

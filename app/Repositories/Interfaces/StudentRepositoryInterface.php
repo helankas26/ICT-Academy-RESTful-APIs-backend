@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 interface StudentRepositoryInterface
 {
     /**
+     * @param Request $request
      * @return mixed
      */
     public function getAllStudents(Request $request);

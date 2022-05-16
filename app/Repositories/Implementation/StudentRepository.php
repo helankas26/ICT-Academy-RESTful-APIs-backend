@@ -95,6 +95,7 @@ class StudentRepository implements StudentRepositoryInterface
      * @param Student $student
      * @return mixed
      * @throws Exception
+     * @throws Throwable
      */
     public function updateStudent(UpdateStudentRequest $request, Student $student)
     {

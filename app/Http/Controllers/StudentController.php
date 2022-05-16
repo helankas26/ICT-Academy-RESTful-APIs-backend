@@ -31,6 +31,7 @@ class StudentController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return StudentCollection
      */
     public function index(Request $request)
