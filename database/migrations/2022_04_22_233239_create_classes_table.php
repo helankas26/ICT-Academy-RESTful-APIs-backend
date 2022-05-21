@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('classes', function (Blueprint $table) {
             $table->char('classID', 8);
             $table->string('className', 100);
-            $table->string('Day', 10);
+            $table->string('day', 10);
             $table->time('startTime');
             $table->time('endTime');
             $table->char('grade', 5);

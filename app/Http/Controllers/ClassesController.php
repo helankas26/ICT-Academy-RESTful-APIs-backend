@@ -35,8 +35,11 @@ class ClassesController extends Controller
      */
     public function index(Request $request)
     {
-        $request->validate(['status' => ['required', 'string', 'max:10', Rule::in(['Active', 'Deactivate'])],
-            'feeType' => ['nullable', 'string', 'max:8', Rule::in(['Daily', 'Monthly'])]]);
+        $request->validate([
+            'status' => ['required', 'string', 'max:10', Rule::in(['Active', 'Deactivate'])],
+            'feeType' => ['nullable', 'string', 'max:8', Rule::in(['Daily', 'Monthly'])],
+            'day' => ['nullable', Rule::in(['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']), 'string', 'max:10']
+        ]);
 
         $classes = $this->classesRepository->getAllClasses($request);
 

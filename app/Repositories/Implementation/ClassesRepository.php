@@ -32,9 +32,23 @@ class ClassesRepository implements ClassesRepositoryInterface
      */
     public function getAllClasses(Request $request)
     {
-        if ($request->feeType == null) {
+        if ($request->feeType != null) {
             $classes = Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
                 ->where('status', data_get($request, 'status'))
+                ->where('feeType', data_get($request, 'feeType'))
+                ->get();
+
+            if ($classes->isEmpty()){
+                throw new Exception('Failed to retrieve Class');
+            }
+
+            return $classes;
+        }
+
+        if ($request->day != null) {
+            $classes = Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+                ->where('status', data_get($request, 'status'))
+                ->where('day', data_get($request, 'day'))
                 ->get();
 
             if ($classes->isEmpty()){
@@ -45,9 +59,8 @@ class ClassesRepository implements ClassesRepositoryInterface
         }
 
         $classes = Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
-        ->where('status', data_get($request, 'status'))
-        ->where('feeType', data_get($request, 'feeType'))
-        ->get();
+            ->where('status', data_get($request, 'status'))
+            ->get();
 
         if ($classes->isEmpty()){
             throw new Exception('Failed to retrieve Class');
@@ -65,7 +78,7 @@ class ClassesRepository implements ClassesRepositoryInterface
         return Classes::query()->create([
             'classID' => $this->IDGenerateService->classID(),
             'className' => data_get($request, 'className'),
-            'Day' => data_get($request, 'Day'),
+            'day' => data_get($request, 'day'),
             'startTime' => data_get($request, 'startTime'),
             'endTime' => data_get($request, 'endTime'),
             'grade' => data_get($request, 'grade'),
@@ -99,7 +112,7 @@ class ClassesRepository implements ClassesRepositoryInterface
     {
         $updated = $class->update([
             'className' => data_get($request, 'className', $class->className),
-            'Day' => data_get($request, 'Day', $class->Day),
+            'day' => data_get($request, 'day', $class->day),
             'startTime' => data_get($request, 'startTime', $class->startTime),
             'endTime' => data_get($request, 'endTime', $class->endTime),
             'grade' => data_get($request, 'grade', $class->grade),

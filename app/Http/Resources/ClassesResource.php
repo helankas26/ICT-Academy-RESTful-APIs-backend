@@ -25,7 +25,7 @@ class ClassesResource extends JsonResource
         return [
             'classID' => $this->classID,
             'className' => $this->className,
-            'Day' => $this->Day,
+            'day' => $this->day,
             'startTime' => date('h:i A', strtotime($this->startTime)),
             'endTime' => date('h:i A', strtotime($this->endTime)),
             'grade' => $this->grade,
