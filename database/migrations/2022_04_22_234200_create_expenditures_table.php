@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('expenditures', function (Blueprint $table) {
             $table->id('expenseID');
-            $table->string('Expense', 100);
+            $table->string('expense', 100);
             $table->decimal('expenseAmount', 8, 2);
             $table->date('date');
             $table->char('handlerStaffID', 11);

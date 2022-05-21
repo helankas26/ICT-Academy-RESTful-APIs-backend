@@ -39,14 +39,28 @@ class Expenditure extends Model
     protected $keyType = 'int';
 
     /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
      */
     protected $casts = [
-        'expenseAmount' => 'decimal:10',
-        'date' => 'datetime:Y-m-d'
+        'expenseAmount' => 'decimal:2',
+        'date' => 'timestamp:Y-m-d'
     ];
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
     /**
      * Get the student that owns the branch.

@@ -2,53 +2,110 @@
 
 namespace App\Repositories\Implementation;
 
+use App\Http\Requests\StoreExpenditureRequest;
+use App\Http\Requests\UpdateExpenditureRequest;
+use App\Models\Expenditure;
 use App\Repositories\Interfaces\ExpenditureRepositoryInterface;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class ExpenditureRepository implements ExpenditureRepositoryInterface
 {
-
     /**
+     * @param Request $request
      * @return mixed
+     * @throws Exception
      */
-    public function getAllExpenditures()
+    public function getAllExpenditures(Request $request)
     {
-        // TODO: Implement getAllExpenditures() method.
+        if ($request->date != null) {
+            $expenditures = Expenditure::query()->with(['staff', 'branch'])
+                ->whereYear('date', data_get($request, 'date'))
+                ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
+                ->orderBy('date', 'asc')
+                ->get();
+
+            if ($expenditures->isEmpty()) {
+                throw new Exception('Failed to retrieve Expenditures');
+            }
+
+            return $expenditures;
+        }
+
+        $expenditures = Expenditure::query()->with(['staff', 'branch'])
+            ->whereYear('date', Carbon::now()->year)
+            ->whereMonth('date', Carbon::now()->month)
+            ->orderBy('date', 'asc')
+            ->get();
+
+        if ($expenditures->isEmpty()) {
+            throw new Exception('Failed to retrieve Expenditures');
+        }
+
+        return $expenditures;
     }
 
     /**
-     * @param array $request
+     * @param StoreExpenditureRequest $request
      * @return mixed
      */
-    public function createExpenditure(array $request)
+    public function createExpenditure(StoreExpenditureRequest $request)
     {
-        // TODO: Implement createExpenditure() method.
+        return Expenditure::query()->create([
+            'expense' => data_get($request, 'expense'),
+            'expenseAmount' => data_get($request, 'expenseAmount'),
+            'date' => data_get($request, 'date'),
+            'handlerStaffID' => data_get($request, 'handlerStaffID'),
+            'branchID' => data_get($request, 'branchID'),
+        ]);
     }
 
     /**
-     * @param $expenditure
+     * @param Expenditure $expenditure
      * @return mixed
      */
-    public function getExpenditureById($expenditure)
+    public function getExpenditureById(Expenditure $expenditure)
     {
-        // TODO: Implement getExpenditureById() method.
+        return Expenditure::query()->find($expenditure);
     }
 
     /**
-     * @param array $request
-     * @param $expenditure
+     * @param UpdateExpenditureRequest $request
+     * @param Expenditure $expenditure
      * @return mixed
+     * @throws Exception
      */
-    public function updateExpenditure(array $request, $expenditure)
+    public function updateExpenditure(UpdateExpenditureRequest $request, Expenditure $expenditure)
     {
-        // TODO: Implement updateExpenditure() method.
+        $updated = $expenditure->update([
+            'expense' => data_get($request, 'expense', $expenditure->expense),
+            'expenseAmount' => data_get($request, 'expenseAmount', $expenditure->expenseAmount),
+            'date' => data_get($request, 'date', $expenditure->date),
+            'handlerStaffID' => data_get($request, 'handlerStaffID', $expenditure->handlerStaffID),
+            'branchID' => data_get($request, 'branchID', $expenditure->branchID),
+        ]);
+
+        if (!$updated) {
+            throw new Exception('Failed to update Expenditures: ' . $expenditure->expenseID);
+        }
+
+        return $expenditure;
     }
 
     /**
-     * @param $expenditure
+     * @param Expenditure $expenditure
      * @return mixed
+     * @throws Exception
      */
-    public function forceDeleteExpenditure($expenditure)
+    public function forceDeleteExpenditure(Expenditure $expenditure)
     {
-        // TODO: Implement forceDeleteExpenditure() method.
+        $deleted = $expenditure->delete();
+
+        if (!$deleted){
+            throw new Exception('Failed to delete Expenditures: ' . $expenditure->expenseID);
+        }
+
+        return $deleted;
     }
 }
