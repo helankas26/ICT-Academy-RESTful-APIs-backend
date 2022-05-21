@@ -51,9 +51,16 @@ class Advance extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'advanceAmount' => 'decimal:10',
-        'date' => 'datetime:Y-m-d'
+        'advanceAmount' => 'decimal:2',
+        'date' => 'timestamp:Y-m-d'
     ];
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
     /**
      * Get the student that owns the branch.
