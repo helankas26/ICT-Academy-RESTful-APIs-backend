@@ -22,7 +22,36 @@ class PersonResource extends JsonResource
      */
     public function toArray($request)
     {
-        if ($this->personType == 'Employee') {
+        if ($this->personable->employeeType == 'Staff') {
+            return [
+                'personID' => $this->personID,
+                'personType' => $this->personType,
+                'firstName' => $this->firstName,
+                'lastName' => $this->lastName,
+                'dob' => $this->dob,
+                'sex' => $this->sex,
+                'telNo' => $this->telNo,
+                'address' => $this->address,
+                'email' => $this->email,
+                'status' => $this->status,
+                'joinedDate' => $this->joinedDate,
+                $this->personType => [
+                    "employeeID"=> $this->personable->employeeID,
+                    "employeeType"=> $this->personable->employeeType,
+                    "nic"=> $this->personable->nic,
+                    "title"=> $this->personable->title,
+                    $this->personable->employeeType => [
+                        "staffID" =>  $this->personable->employable->staffID,
+                        'branch' => [
+                            'branchID' => $this->personable->employable->branch->branchID,
+                            'branchName' => $this->personable->employable->branch->branchName,
+                        ],
+                    ],
+                ]
+            ];
+        }
+
+        if ($this->personable->employeeType == 'Teacher') {
             return [
                 'personID' => $this->personID,
                 'personType' => $this->personType,
@@ -60,7 +89,10 @@ class PersonResource extends JsonResource
             $this->personType => [
                 'studentID' => $this->personable->studentID,
                 'grade' => $this->personable->grade,
-                'branchID' => $this->personable->branchID,
+                'branch' => [
+                    'branchID' => $this->personable->branch->branchID,
+                    'branchName' => $this->personable->branch->branchName,
+                ],
                 'parent' => $this->personable->parent,
             ],
         ];

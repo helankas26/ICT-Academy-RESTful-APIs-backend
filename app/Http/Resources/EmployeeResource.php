@@ -22,6 +22,35 @@ class EmployeeResource extends JsonResource
      */
     public function toArray($request)
     {
+        if ($this->employeeType == 'Staff') {
+            return [
+                'personID' => $this->person->personID,
+                'personType' => $this->person->personType,
+                'firstName' => $this->person->firstName,
+                'lastName' => $this->person->lastName,
+                'dob' => $this->person->dob,
+                'sex' => $this->person->sex,
+                'telNo' => $this->person->telNo,
+                'address' => $this->person->address,
+                'email' => $this->person->email,
+                'status' => $this->person->status,
+                'joinedDate' => $this->person->joinedDate,
+                'employee' => [
+                    "employeeID"=> $this->employeeID,
+                    "employeeType"=> $this->employeeType,
+                    "nic"=> $this->nic,
+                    "title"=> $this->title,
+                    "Staff" => [
+                        "staffID" => $this->employable->staffID,
+                        'branch' => [
+                            'branchID' => $this->employable->branch->branchID,
+                            'branchName' => $this->employable->branch->branchName,
+                        ],
+                    ],
+                ]
+            ];
+        }
+
         return [
             'personID' => $this->person->personID,
             'personType' => $this->person->personType,

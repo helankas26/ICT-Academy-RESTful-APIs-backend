@@ -21,7 +21,6 @@ class EmployeeRepository implements EmployeeRepositoryInterface
     public function getAllEmployees(Request $request)
     {
         $employees = Employee::query()->with(['employable', 'person'])
-            ->join('staff', 'employees.employeeID', 'staff.staffID')
             ->join('people', 'employees.employeeID', 'people.personID')
             ->where('people.status', data_get($request, 'status'))
             ->get();
