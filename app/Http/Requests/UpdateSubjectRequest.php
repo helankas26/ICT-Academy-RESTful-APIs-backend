@@ -32,7 +32,16 @@ class UpdateSubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'subjectName' => ['required', 'string', Rule::unique('subjects')->ignore($this->route('subject'), 'subjectID'), 'min:4', 'max:20'],
+            'subjectName' => [
+                'required',
+                'string',
+                Rule::unique('subjects')->where(function ($query) {
+                    $query->where('subjectName', $this->subjectName)
+                        ->where('categoryID', $this->categoryID);
+                })->ignore($this->route('subject'), 'subjectID'),
+                'min:4',
+                'max:20'
+            ],
             'medium' => ['required', Rule::in(['Sinhala', 'English', 'Tamil']), 'string', 'max:7'],
             'categoryID' => ['required', Rule::exists('categories', 'categoryID'), 'string', 'size:8']
         ];
