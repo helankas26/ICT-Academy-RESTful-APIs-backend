@@ -46,7 +46,7 @@ class UpdateStudentRequest extends FormRequest
             'title' => ['required', Rule::in(['Mr.', 'Mrs.']), 'string', 'max:5'],
             'parentName' => ['required', 'string', 'regex:/^[a-zA-Z\s\.]+$/i', 'min:4', 'max:50'],
             'parentType' => ['required', Rule::in(['Father', 'Mother', 'Guardian']), 'string', 'max:10'],
-            'parenTelNo' => ['required', 'string', 'size:10']
+            'parentTelNo' => ['required', 'string', 'size:10']
         ];
     }
 }

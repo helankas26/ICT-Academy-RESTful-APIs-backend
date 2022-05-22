@@ -42,7 +42,7 @@ class StudentResource extends JsonResource
                 'title' => $this->parent->title,
                 'parentName' => $this->parent->parentName,
                 'parentType' => $this->parent->parentType,
-                'parenTelNo' => $this->parent->telNo,
+                'parentTelNo' => $this->parent->telNo,
             ],
         ];
     }

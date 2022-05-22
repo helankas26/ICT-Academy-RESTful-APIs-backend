@@ -79,7 +79,7 @@ class StudentRepository implements StudentRepositoryInterface
                 'title' => data_get($request, 'title'),
                 'parentName' => data_get($request, 'parentName'),
                 'parentType' => data_get($request, 'parentType'),
-                'telNo' => data_get($request, 'parenTelNo'),
+                'telNo' => data_get($request, 'parentTelNo'),
             ]);
 
             DB::statement('SET foreign_key_checks = 1;');
@@ -129,7 +129,7 @@ class StudentRepository implements StudentRepositoryInterface
                 'title' => data_get($request, 'title', $student->person->title),
                 'parentName' => data_get($request, 'parentName', $student->person->parentName),
                 'parentType' => data_get($request, 'parentType', $student->person->parentType),
-                'telNo' => data_get($request, 'parenTelNo', $student->person->parenTelNo),
+                'telNo' => data_get($request, 'parentTelNo', $student->person->parentTelNo),
             ]);
 
             if (!$updated){
