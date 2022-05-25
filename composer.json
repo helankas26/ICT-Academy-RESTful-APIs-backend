@@ -35,8 +35,10 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan ide-helper:eloquent",
             "@php artisan ide-helper:generate",
             "@php artisan ide-helper:meta",
+            "@php artisan ide-helper:models --nowrite",
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
@@ -51,7 +53,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "barryvdh/laravel-ide-helper"
+            ]
         }
     },
     "config": {
