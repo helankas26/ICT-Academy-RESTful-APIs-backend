@@ -61,6 +61,15 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * @param Category $category
+     * @return mixed
+     */
+    public function getSubjectsByCategoryId(Category $category)
+    {
+        return Category::query()->with('subjects')->find($category);
+    }
+
+    /**
      * @param UpdateCategoryRequest $request
      * @param Category $category
      * @return mixed

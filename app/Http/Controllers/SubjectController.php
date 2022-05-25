@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\SubjectCollection;
 use App\Http\Resources\SubjectResource;
 use App\Models\Subject;
@@ -90,7 +91,12 @@ class SubjectController extends Controller
         return new JsonResponse([
             'success' => $deleted,
             'status' => 'deleted',
-            'data' => $subject,
+            'data' => [
+                'subjectID' => $subject->subjectID,
+                'subjectName' => $subject->subjectName,
+                'medium' => $subject->medium,
+                'category' => new CategoryResource($subject->category),
+            ],
         ]);
     }
 }

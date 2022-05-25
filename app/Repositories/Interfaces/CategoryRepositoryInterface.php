@@ -26,6 +26,12 @@ interface CategoryRepositoryInterface
     public function getCategoryById(Category $category);
 
     /**
+     * @param Category $category
+     * @return mixed
+     */
+    public function getSubjectsByCategoryId(Category $category);
+
+    /**
      * @param UpdateCategoryRequest $request
      * @param Category $category
      * @return mixed

@@ -30,7 +30,7 @@ class SubjectRepository implements SubjectRepositoryInterface
      */
     public function getAllSubjects()
     {
-        $subjects = Subject::query()->get();
+        $subjects = Subject::query()->with('category')->get();
 
         if ($subjects->isEmpty()){
             throw new Exception('Failed to retrieve Subject');
@@ -45,12 +45,14 @@ class SubjectRepository implements SubjectRepositoryInterface
      */
     public function createSubject(StoreSubjectRequest $request)
     {
-        return Subject::query()->create([
+        $subject = Subject::query()->create([
             'subjectID' => $this->IDGenerateService->subjectID(),
             'subjectName' => data_get($request, 'subjectName'),
             'medium' => data_get($request, 'medium'),
             'categoryID' => data_get($request, 'categoryID'),
         ]);
+
+        return Subject::query()->with('category')->find(data_get($subject, 'subjectID'));
     }
 
     /**
@@ -59,7 +61,7 @@ class SubjectRepository implements SubjectRepositoryInterface
      */
     public function getSubjectById(Subject $subject)
     {
-        return Subject::query()->find($subject);
+        return Subject::query()->with('category')->find($subject);
     }
 
     /**
@@ -80,7 +82,7 @@ class SubjectRepository implements SubjectRepositoryInterface
             throw new Exception('Failed to update Subject: ' . $subject->subjectID);
         }
 
-        return $subject;
+        return Subject::query()->with('category')->find(data_get($subject, 'subjectID'));
     }
 
     /**

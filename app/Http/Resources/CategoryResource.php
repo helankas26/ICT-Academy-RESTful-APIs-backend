@@ -25,6 +25,7 @@ class CategoryResource extends JsonResource
         return [
             'categoryID' => $this->categoryID,
             'categoryName' => $this->categoryName,
+            'subjects' => SubjectResource::collection($this->whenLoaded('subjects')),
         ];
     }
 
