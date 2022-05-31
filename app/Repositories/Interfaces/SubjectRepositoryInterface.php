@@ -26,6 +26,12 @@ interface SubjectRepositoryInterface
     public function getSubjectById(Subject $subject);
 
     /**
+     * @param Subject $subject
+     * @return mixed
+     */
+    public function getClassesBySubjectById(Subject $subject);
+
+    /**
      * @param UpdateSubjectRequest $request
      * @param Subject $subject
      * @return mixed

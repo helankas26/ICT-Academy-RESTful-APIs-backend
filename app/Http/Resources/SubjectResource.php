@@ -27,6 +27,7 @@ class SubjectResource extends JsonResource
             'subjectName' => $this->subjectName,
             'medium' => $this->medium,
             'category' => new CategoryResource($this->whenLoaded('category')),
+            'classes' => ClassesResource::collection($this->whenLoaded('classes')),
         ];
     }
 

@@ -75,7 +75,7 @@ class ClassesRepository implements ClassesRepositoryInterface
      */
     public function createClass(StoreClassesRequest $request)
     {
-        return Classes::query()->create([
+        $class = Classes::query()->create([
             'classID' => $this->IDGenerateService->classID(),
             'className' => data_get($request, 'className'),
             'day' => data_get($request, 'day'),
@@ -91,6 +91,8 @@ class ClassesRepository implements ClassesRepositoryInterface
             'teacherID' => data_get($request, 'teacherID'),
             'branchID' => data_get($request, 'branchID'),
         ]);
+
+        return Classes::query()->with('subject')->find(data_get($class, 'classID'));
     }
 
     /**
@@ -99,7 +101,7 @@ class ClassesRepository implements ClassesRepositoryInterface
      */
     public function getClassById(Classes $class)
     {
-        return Classes::query()->find($class);
+        return Classes::query()->with('subject')->find($class);
     }
 
     /**
@@ -130,7 +132,7 @@ class ClassesRepository implements ClassesRepositoryInterface
             throw new Exception('Failed to update Class: ' . $class->classID);
         }
 
-        return $class;
+        return Classes::query()->with('subject')->find(data_get($class, 'classID'));
     }
 
     /**

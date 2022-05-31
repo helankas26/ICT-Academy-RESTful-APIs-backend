@@ -10,6 +10,7 @@ use App\Http\Requests\StoreSubjectRequest;
 use App\Http\Requests\UpdateSubjectRequest;
 use App\Repositories\Interfaces\SubjectRepositoryInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
@@ -55,10 +56,17 @@ class SubjectController extends Controller
      * Display the specified resource.
      *
      * @param Subject $subject
+     * @param Request $request
      * @return SubjectCollection
      */
-    public function show(Subject $subject)
+    public function show(Subject $subject,  Request $request)
     {
+        if ($request->routeIs('subjects.show.classes')) {
+            $subject = $this->subjectRepository->getClassesBySubjectById($subject);
+
+            return new SubjectCollection($subject);
+        }
+
         $subject = $this->subjectRepository->getSubjectById($subject);
 
         return new SubjectCollection($subject);

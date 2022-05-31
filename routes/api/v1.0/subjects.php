@@ -11,6 +11,7 @@ Route::middleware([
     ->group(function (){
         Route::get('/subjects', [SubjectController::class, 'index'])->name('index');
         Route::get('/subjects/{subject:subjectID}', [SubjectController::class, 'show'])->name('show');
+        Route::get('/subjects/{subject:subjectID}/classes', [SubjectController::class, 'show'])->name('show.classes');
         Route::post('/subjects', [SubjectController::class, 'store'])->name('store');
         Route::patch('/subjects/{subject:subjectID}', [SubjectController::class, 'update'])->name('update');
         Route::delete('/subjects/{subject:subjectID}', [SubjectController::class, 'destroy'])->name('destroy');
