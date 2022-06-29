@@ -136,7 +136,8 @@ class Classes extends Model
      */
     public function students(): BelongsToMany
     {
-        return $this->belongsToMany(Student::class)->using(Enrollment::class)->as('Enrollment')
+        return $this->belongsToMany(Student::class, 'enrollment', 'classID', 'studentID')
+            ->using(Enrollment::class)->as('enrollment')
             ->withPivot('paymentStatus', 'enrolledDate', 'status');
     }
 }

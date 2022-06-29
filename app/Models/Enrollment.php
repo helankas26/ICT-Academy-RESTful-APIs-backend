@@ -13,26 +13,26 @@ class Enrollment extends Pivot
      */
     protected $table = 'enrollment';
 
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'studentID';
-
-    /**
-     * Indicates if the model's ID is auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
-     * The data type of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'string';
+//    /**
+//     * The primary key associated with the table.
+//     *
+//     * @var string
+//     */
+//    protected $primaryKey = 'studentID';
+//
+//    /**
+//     * Indicates if the model's ID is auto-incrementing.
+//     *
+//     * @var bool
+//     */
+//    public $incrementing = false;
+//
+//    /**
+//     * The data type of the auto-incrementing ID.
+//     *
+//     * @var string
+//     */
+//    protected $keyType = 'string';
 
     /**
      * Indicates if the model should be timestamped.
@@ -47,12 +47,20 @@ class Enrollment extends Pivot
      * @var array
      */
     protected $attributes = [
+        'paymentStatus' => '1',
         'status' => '1',
     ];
 
     protected $casts = [
         'paymentStatus' => 'integer',
-        'enrolledDate' => 'datetime:Y-m-d',
+        'enrolledDate' => 'timestamp:Y-m-d',
         'status' => 'integer'
     ];
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 }

@@ -98,11 +98,12 @@ class Student extends Model
     }
 
     /**
-     * The students who enroll to the class.
+     * The classes that enrolled by student.
      */
     public function classes(): BelongsToMany
     {
-        return $this->belongsToMany(Classes::class)->using(Enrollment::class)->as('Enrollment')
+        return $this->belongsToMany(Classes::class, 'enrollment', 'studentID', 'classID')
+            ->using(Enrollment::class)->as('enrollment')
             ->withPivot('paymentStatus', 'enrolledDate', 'status');
     }
 

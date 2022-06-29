@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('enrollment', function (Blueprint $table) {
             $table->char('studentID', 11);
             $table->char('classID', 8);
-            $table->integer('paymentStatus')->default(1);
+            $table->integer('paymentStatus')->default(1)->comment('Paid >= 0, Free = -1');
             $table->date('enrolledDate');
             $table->smallInteger('status')->default(1)->comment('Active = 1, Deactivate = 0');
             $table->foreign('studentID')->references('studentID')->on('students')->cascadeOnDelete();
