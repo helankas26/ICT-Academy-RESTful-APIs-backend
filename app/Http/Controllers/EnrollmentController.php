@@ -37,7 +37,7 @@ class EnrollmentController extends Controller
      *
      * @return EnrollmentStudentCollection
      */
-    public function index()
+    public function indexByStudents()
     {
         $enrollments = $this->enrollmentRepository->getAllStudentsEnrollments();
 
@@ -73,7 +73,7 @@ class EnrollmentController extends Controller
      *
      * @return EnrollmentClassCollection
      */
-    public function indexClasses()
+    public function indexByClasses()
     {
         $enrollments = $this->enrollmentRepository->getAllClassesEnrollments();
 
@@ -86,7 +86,7 @@ class EnrollmentController extends Controller
      * @param StoreEnrollmentRequest $request
      * @return JsonResponse
      */
-    public function store(StoreEnrollmentRequest $request)
+    public function storeByStudent(StoreEnrollmentRequest $request)
     {
         $created = $this->enrollmentRepository->attachStudentEnrollments($request);
 
@@ -104,7 +104,7 @@ class EnrollmentController extends Controller
      * @param StoreEnrollmentRequest $request
      * @return JsonResponse
      */
-    public function storeClass(StoreEnrollmentRequest $request)
+    public function storeByClass(StoreEnrollmentRequest $request)
     {
         $created = $this->enrollmentRepository->attachClassEnrollments($request);
 
@@ -122,7 +122,7 @@ class EnrollmentController extends Controller
      * @param Student $student
      * @return EnrollmentStudentCollection
      */
-    public function show(Student $student)
+    public function showByStudent(Student $student)
     {
         $enrollment = $this->enrollmentRepository->getStudentEnrollmentsById($student);
 
@@ -135,7 +135,7 @@ class EnrollmentController extends Controller
      * @param Classes $class
      * @return EnrollmentClassCollection
      */
-    public function showClass(Classes $class)
+    public function showByClass(Classes $class)
     {
         $enrollment = $this->enrollmentRepository->getClassEnrollmentsById($class);
 
@@ -167,7 +167,7 @@ class EnrollmentController extends Controller
      * @param Classes $class
      * @return JsonResponse
      */
-    public function update(UpdateEnrollmentRequest $request, Student $student, Classes $class)
+    public function updateToFreeCard(UpdateEnrollmentRequest $request, Student $student, Classes $class)
     {
         $updated = $this->enrollmentRepository->updateStudentFreeClass($request, $student, $class);
 
@@ -349,7 +349,7 @@ class EnrollmentController extends Controller
      * @param Student $student
      * @return JsonResponse
      */
-    public function destroy(Request $request, Student $student)
+    public function destroyByStudent(Request $request, Student $student)
     {
         $request->validate([
             'classID' => ['required', Rule::exists('classes', 'classID')],
@@ -372,7 +372,7 @@ class EnrollmentController extends Controller
      * @param Classes $class
      * @return JsonResponse
      */
-    public function destroyClass(Request $request, Classes $class)
+    public function destroyByClass(Request $request, Classes $class)
     {
         $request->validate([
             'studentID' => ['required', Rule::exists('students', 'studentID')],
