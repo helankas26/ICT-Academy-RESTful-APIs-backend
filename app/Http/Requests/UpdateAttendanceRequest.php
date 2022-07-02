@@ -3,9 +3,17 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateAttendanceRequest extends FormRequest
 {
+    /**
+     * Indicates if the validator should stop on the first rule failure.
+     *
+     * @var bool
+     */
+    protected $stopOnFirstFailure = true;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +21,7 @@ class UpdateAttendanceRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +32,11 @@ class UpdateAttendanceRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'studentID' => ['nullable', Rule::exists('students', 'studentID')],
+            'classID' => ['required', Rule::exists('classes', 'classID')],
+            'date' => ['required', 'date'],
+            'time' => ['nullable', 'date_format:H:i'],
+            'attendStatus' => ['required', Rule::in(['0', '1']), 'integer']
         ];
     }
 }

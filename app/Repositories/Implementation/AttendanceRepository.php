@@ -2,53 +2,179 @@
 
 namespace App\Repositories\Implementation;
 
+use App\Http\Requests\StoreAttendanceRequest;
+use App\Http\Requests\UpdateAttendanceRequest;
+use App\Models\Attendance;
+use App\Models\Classes;
+use App\Models\Enrollment;
+use App\Models\Student;
 use App\Repositories\Interfaces\AttendanceRepositoryInterface;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceRepository implements AttendanceRepositoryInterface
 {
-
     /**
+     * @param Request $request
      * @return mixed
+     * @throws Exception
      */
-    public function getAllAttendances()
+    public function getAllAttendances(Request $request)
     {
-        // TODO: Implement getAllAttendances() method.
+        return Classes::query()
+            ->with(['attendances' => function ($query) use ($request) {
+                $query->where('date', data_get($request, 'date'));
+            }])->whereHas('attendances', function (Builder $query) use ($request) {
+                $query->where('date', data_get($request, 'date'));
+            })->get();
     }
 
     /**
-     * @param array $request
+     * @param StoreAttendanceRequest $request
      * @return mixed
      */
-    public function createAttendance(array $request)
+    public function addStudentToAttendance(StoreAttendanceRequest $request)
     {
-        // TODO: Implement createAttendance() method.
+        return Attendance::query()->create([
+            'studentID' => data_get($request, 'studentID'),
+            'classID' => data_get($request, 'classID'),
+            'date' => Carbon::now()->format('Y-m-d'),
+        ]);
     }
 
     /**
-     * @param $attendance
+     * @param Request $request
+     * @param Student $student
      * @return mixed
      */
-    public function getAttendanceById($attendance)
+    public function getStudentAttendanceById(Request $request, Student $student)
     {
-        // TODO: Implement getAttendanceById() method.
+        return Attendance::query()->with('class', 'student.person')
+            ->join('enrollment', function ($join) {
+                $join->on('attendances.studentID', 'enrollment.studentID')
+                    ->on('attendances.classID', 'enrollment.classID')
+                    ->where('enrollment.status', 1);
+            })
+            ->where('attendances.studentID', $student->studentID)
+            ->where('attendances.classID', data_get($request, 'classID'))
+            ->where('attendances.date', data_get($request, 'date'))
+            ->get();
     }
 
     /**
-     * @param array $request
-     * @param $attendance
+     * @param UpdateAttendanceRequest $request
+     * @param Student $student
      * @return mixed
+     * @throws Exception
      */
-    public function updateAttendance(array $request, $attendance)
+    public function updateMarkStudentAttendance(UpdateAttendanceRequest $request, Student $student)
     {
-        // TODO: Implement updateAttendance() method.
+        $updated = $student->attendances()
+            ->where('attendances.classID', data_get($request, 'classID'))
+            ->where('attendances.date', data_get($request, 'date'))
+            ->update([
+                'time' => data_get($request, 'attendStatus') != 0 ? Carbon::now()->format('h:i:s') : null,
+                'attendStatus' => data_get($request, 'attendStatus'),
+            ]);
+
+        if (!$updated) {
+            throw new Exception('Failed to update student\'s attendance: '
+                . $student->studentID . ', ' . $request->classID . ', ' .  $request->date);
+        }
+
+        return $updated;
     }
 
     /**
-     * @param $attendance
+     * @param Request $request
+     * @param Student $student
+     * @return mixed
+     * @throws Exception
+     */
+    public function removeStudentAttendance(Request $request, Student $student)
+    {
+        $deleted = $student->attendances()
+            ->where('attendances.classID', data_get($request, 'classID'))
+            ->where('attendances.date', data_get($request, 'date'))
+            ->delete();
+
+        if (!$deleted){
+            throw new Exception('Failed to delete student\'s attendance: '
+                . $student->studentID . ', ' . $request->classID . ', ' .  $request->date);
+        }
+
+        return $deleted;
+    }
+
+    /**
+     * @param StoreAttendanceRequest $request
+     * @return mixed
+     * @throws \Throwable
+     */
+    public function addClassToAttendance(StoreAttendanceRequest $request)
+    {
+        $class = Classes::query()->find(data_get($request, 'classID'));
+
+        $students = Enrollment::query()
+            ->where('classID', $class->classID)
+            ->where('status', '1')
+            ->pluck("studentID");
+
+       $attendance = array();
+
+        foreach ($students as $student) {
+            $attendance[] = [
+                'studentID' => $student,
+                'classID' => $class->classID,
+                'date' => Carbon::now()->format('Y-m-d')
+            ];
+        }
+
+        return DB::transaction(function () use ($class, $attendance) {
+            return $class->attendances()->createMany($attendance);
+        });
+    }
+
+    /**
+     * @param Request $request
+     * @param Classes $class
      * @return mixed
      */
-    public function forceDeleteAttendance($attendance)
+    public function getClassAttendanceById(Request $request, Classes $class)
     {
-        // TODO: Implement forceDeleteAttendance() method.
+        return Classes::query()
+            ->with(['attendances' => function ($query) use ($request) {
+                $query->join('enrollment', function ($join) {
+                    $join->on('attendances.studentID', 'enrollment.studentID')
+                        ->on('attendances.classID', 'enrollment.classID')
+                        ->where('enrollment.status', 1);
+                })->where('date', data_get($request, 'date'));
+            }])->whereHas('attendances', function (Builder $query) use ($request, $class) {
+                $query->where('classID', $class->classID)
+                    ->where('date', data_get($request, 'date'));
+            })->get();
+    }
+
+    /**
+     * @param Request $request
+     * @param Classes $class
+     * @return mixed
+     * @throws Exception
+     */
+    public function removeClassAttendance(Request $request, Classes $class)
+    {
+        $deleted = $class->attendances()
+            ->where('attendances.date', data_get($request, 'date'))
+            ->delete();
+
+        if (!$deleted){
+            throw new Exception('Failed to delete class\'s attendance: '
+                . $class->classID . ', ' .  $request->date);
+        }
+
+        return $deleted;
     }
 }

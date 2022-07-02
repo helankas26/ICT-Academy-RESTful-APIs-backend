@@ -3,9 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class AttendanceCollection extends ResourceCollection
+class AttendanceClassResource extends JsonResource
 {
     /**
      * The "data" wrapper that should be applied.
@@ -15,7 +15,7 @@ class AttendanceCollection extends ResourceCollection
     public static $wrap = 'attendance';
 
     /**
-     * Transform the resource collection into an array.
+     * Transform the resource into an array.
      *
      * @param Request $request
      * @return array
@@ -23,8 +23,9 @@ class AttendanceCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' => AttendanceResource::collection($this->collection),
-            'meta' => ['attendance_count' => $this->collection->count()],
+            "classID" => $this->classID,
+            'className' => $this->className,
+            "students" => AttendedStudentResource::collection($this->attendances),
         ];
     }
 

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class AttendanceCollection extends ResourceCollection
+class AttendanceClassCollection extends ResourceCollection
 {
     /**
      * The "data" wrapper that should be applied.
@@ -23,7 +23,7 @@ class AttendanceCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' => AttendanceResource::collection($this->collection),
+            'data' => AttendanceClassResource::collection($this->collection),
             'meta' => ['attendance_count' => $this->collection->count()],
         ];
     }

@@ -46,12 +46,20 @@ class Attendance extends Model
     public $timestamps = false;
 
     /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
      * The model's default values for attributes.
      *
      * @var array
      */
     protected $attributes = [
-        'status' => '0'
+        'attendStatus' => '0',
+        'time' => null
     ];
 
     /**
@@ -60,9 +68,9 @@ class Attendance extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'date' => 'datetime:Y-m-d',
-        'time' => 'datetime:H:i',
-        'status' => 'integer'
+        'time' => 'timestamp:h:i A',
+        'date' => 'timestamp:Y-m-d',
+        'attendStatus' => 'integer'
     ];
 
     /**
