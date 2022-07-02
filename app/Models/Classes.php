@@ -71,7 +71,7 @@ class Classes extends Model
     protected $casts = [
         'startTime' => 'timestamp:h:i A',
         'endTime' => 'timestamp:h:i A',
-        'grade' => 'integer',
+        'grade' => 'string',
         'classFee' => 'decimal:2'
     ];
 
