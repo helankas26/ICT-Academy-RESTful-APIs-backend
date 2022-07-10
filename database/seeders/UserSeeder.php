@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             'userID' => $IDGenerateService->userID(),
-            'userName' => 'SuperAdmin',
+            'username' => 'SuperAdmin',
             'password' => Hash::make('adminSuper2018'),
             'privilege' => 'Super',
             'employeeID' => 'STAFF001',
