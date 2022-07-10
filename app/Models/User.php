@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -49,6 +50,13 @@ class User extends Authenticatable
     public $timestamps = false;
 
     /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
      * The model's default values for attributes.
      *
      * @var array
@@ -56,16 +64,6 @@ class User extends Authenticatable
     protected $attributes = [
         'privilege' => 'Guess',
         'status' => 'Active',
-    ];
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'password',
     ];
 
     /**
@@ -83,6 +81,14 @@ class User extends Authenticatable
      */
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class , 'employeeID', 'employeeID');
+        return $this->belongsTo(Employee::class, 'employeeID', 'employeeID');
+    }
+
+    /**
+     * Get the user login records for the user.
+     */
+    public function userLoginRecords(): HasMany
+    {
+        return $this->hasMany(UserLoginRecord::class, 'userID', 'userID');
     }
 }
