@@ -160,6 +160,23 @@ class EnrollmentController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param Student $student
+     * @return JsonResponse
+     */
+    public function showNotInStudent(Student $student)
+    {
+        $classes = $this->enrollmentRepository->getClassesNotInStudent($student);
+
+        return new JsonResponse([
+            'studentID' => $student->studentID,
+            'studentName' => $student->person->firstName. ' ' . $student->person->lastName,
+            'classes' => EnrollmentResource::collection($classes),
+        ]);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param UpdateEnrollmentRequest $request
@@ -296,6 +313,36 @@ class EnrollmentController extends Controller
     public function updateDaily(Classes $class, Student $student)
     {
         $updated = $this->enrollmentRepository->updateDailyClassPaymentStatus($class, $student);
+
+        $enrollment = $class->students()->find($student)->enrollment;
+
+        return new JsonResponse([
+            'success' => true,
+            'status' => 'updated',
+            'class' => [
+                'classID' => $updated->classID,
+                'className' => $updated->className,
+                'student' => [
+                    'studentID' => $student->studentID,
+                    'studentName' => $student->person->firstName. ' ' . $student->person->lastName,
+                    'paymentStatus'=> $enrollment->paymentStatus,
+                    'enrolledDate' => $enrollment->enrolledDate,
+                    'status' => $enrollment->status,
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Classes $class
+     * @param Student $student
+     * @return JsonResponse
+     */
+    public function updateDailyDecrement(Classes $class, Student $student)
+    {
+        $updated = $this->enrollmentRepository->updateDailyClassPaymentStatusDecrement($class, $student);
 
         $enrollment = $class->students()->find($student)->enrollment;
 

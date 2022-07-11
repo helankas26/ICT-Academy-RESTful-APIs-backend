@@ -38,6 +38,12 @@ interface EnrollmentRepositoryInterface
     public function getStudentEnrollmentsById(Student $student);
 
     /**
+     * @param Student $student
+     * @return mixed
+     */
+    public function getClassesNotInStudent(Student $student);
+
+    /**
      * @param UpdateEnrollmentRequest $request
      * @param Student $student
      * @param Classes $class
@@ -111,6 +117,13 @@ interface EnrollmentRepositoryInterface
      * @return mixed
      */
     public function updateDailyClassPaymentStatus(Classes $class, Student $student);
+
+    /**
+     * @param Classes $class
+     * @param Student $student
+     * @return mixed
+     */
+    public function updateDailyClassPaymentStatusDecrement(Classes $class, Student $student);
 
     /**
      * @return mixed

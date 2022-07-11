@@ -36,12 +36,18 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
      */
     public function getStudentsNotInFreeCard()
     {
-        $enrollment = Enrollment::query()
-            ->whereNot('paymentStatus', -1)
+        $freeCard = Enrollment::query()
+            ->where('paymentStatus', -1)
             ->distinct()
             ->pluck('studentID');
 
-        return Student::query()->with('person')->findMany($enrollment);
+        $notFreeCard = Enrollment::query()
+            ->whereNot('paymentStatus', -1)
+            ->whereNotIn('studentID', $freeCard)
+            ->distinct()
+            ->pluck('studentID');
+
+        return Student::query()->with('person')->findMany($notFreeCard);
     }
 
     /**
@@ -82,7 +88,28 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
      */
     public function getStudentEnrollmentsById(Student $student)
     {
-        return Student::query()->with('classes', 'person')->find($student);
+        return Student::query()->with(['classes', 'person'])->find($student);
+    }
+
+    /**
+     * @param Student $student
+     * @return mixed
+     * @throws Exception
+     */
+    public function getClassesNotInStudent(Student $student)
+    {
+        $enrollment = Enrollment::query()->where('studentID', $student->studentID)->pluck('classID');
+
+        $classes = Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+            ->where('status', 'Active')
+            ->whereNotIn('classID', $enrollment)
+            ->get();
+
+        if ($classes->isEmpty()){
+            throw new Exception('Failed to retrieve Classes');
+        }
+
+        return $classes;
     }
 
     /**
@@ -240,7 +267,7 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
      */
     public function getClassEnrollmentsById(Classes $class)
     {
-        return Classes::query()->with('students', 'students.person')->find($class);
+        return Classes::query()->with(['students', 'students.person'])->find($class);
     }
 
     /**
@@ -277,6 +304,22 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
             ->where('enrollment.status', '1')
             ->whereNot('enrollment.paymentStatus', '-1')
             ->increment('paymentStatus');
+
+        return $class;
+    }
+
+    /**
+     * @param Classes $class
+     * @param Student $student
+     * @return mixed
+     */
+    public function updateDailyClassPaymentStatusDecrement(Classes $class, Student $student)
+    {
+        $class->students()
+            ->where('enrollment.studentID', $student->studentID)
+            ->where('enrollment.status', '1')
+            ->whereNotIn('enrollment.paymentStatus', ['-1', '0'])
+            ->decrement('paymentStatus');
 
         return $class;
     }
