@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->char('subjectID', 8);
-            $table->string('subjectName', 20);
+            $table->string('subjectName', 50);
             $table->char('medium', 7);
             $table->char('categoryID', 8);
             $table->foreign('categoryID')->references('categoryID')->on('categories');

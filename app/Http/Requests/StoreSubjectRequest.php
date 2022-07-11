@@ -40,7 +40,7 @@ class StoreSubjectRequest extends FormRequest
                         ->where('categoryID', $this->categoryID);
                 }),
                 'min:4',
-                'max:20'
+                'max:50'
             ],
             'medium' => ['required', Rule::in(['Sinhala', 'English', 'Tamil']), 'string', 'max:7'],
             'categoryID' => ['required', Rule::exists('categories', 'categoryID'), 'string', 'size:8']
