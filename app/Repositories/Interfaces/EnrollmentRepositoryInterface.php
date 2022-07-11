@@ -131,6 +131,11 @@ interface EnrollmentRepositoryInterface
     public function updateMonthlyClassesPaymentStatus();
 
     /**
+     * @return mixed
+     */
+    public function updateMonthlyClassesPaymentStatusDecrement();
+
+    /**
      * @param UpdateEnrollmentRequest $request
      * @param Classes $class
      * @return mixed

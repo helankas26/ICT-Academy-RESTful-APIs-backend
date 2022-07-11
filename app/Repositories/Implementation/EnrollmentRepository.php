@@ -74,9 +74,14 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
 
             $student = Student::query()->find(data_get($request, 'studentID'));
 
-            $student->classes()->attach(data_get($request, 'classID'), [
-                'enrolledDate' => Carbon::now()->format('Y-m-d')
-            ]);
+            $classes = Classes::query()->findMany(data_get($request, 'classID'));
+
+            foreach ($classes as $class) {
+                $student->classes()->attach($class, [
+                    'paymentStatus' => $class->feeType != 'Monthly' ? 0 : 1,
+                    'enrolledDate' => Carbon::now()->format('Y-m-d')
+                ]);
+            }
 
             return $student;
         });
@@ -254,6 +259,7 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
             $class = Classes::query()->find(data_get($request, 'classID'));
 
             $class->students()->attach(data_get($request, 'studentID'), [
+                'paymentStatus' => $class->feeType != 'Monthly' ? 0 : 1,
                 'enrolledDate' => Carbon::now()->format('Y-m-d')
             ]);
 
@@ -332,7 +338,8 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
     {
         return DB::transaction(function () {
 
-            $classes = Classes::query()->where('feeType', 'Monthly')
+            $classes = Classes::query()->whereHas('students')
+                ->where('feeType', 'Monthly')
                 ->where('status', 'Active')
                 ->get();
 
@@ -341,6 +348,30 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
                     ->where('enrollment.status', '1')
                     ->whereNot('enrollment.paymentStatus', '-1')
                     ->increment('paymentStatus');
+            }
+
+            return $classes;
+        });
+    }
+
+    /**
+     * @return mixed
+     * @throws Throwable
+     */
+    public function updateMonthlyClassesPaymentStatusDecrement()
+    {
+        return DB::transaction(function () {
+
+            $classes = Classes::query()->whereHas('students')
+                ->where('feeType', 'Monthly')
+                ->where('status', 'Active')
+                ->get();
+
+            foreach ($classes as $class) {
+                $class->students()
+                    ->where('enrollment.status', '1')
+                    ->whereNotIn('enrollment.paymentStatus', ['-1', '0'])
+                    ->decrement('paymentStatus');
             }
 
             return $classes;
