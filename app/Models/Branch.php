@@ -91,4 +91,12 @@ class Branch extends Model
     {
         return $this->hasMany(Advance::class, 'branchID', 'branchID');
     }
+
+    /**
+     * Get the exams for the branch.
+     */
+    public function exams(): HasMany
+    {
+        return $this->hasMany(Exam::class, 'branchID', 'branchID');
+    }
 }
