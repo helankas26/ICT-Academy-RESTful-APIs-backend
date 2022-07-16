@@ -2,53 +2,133 @@
 
 namespace App\Repositories\Implementation;
 
+use App\Http\Requests\StoreExamRequest;
+use App\Http\Requests\UpdateExamRequest;
+use App\Models\Exam;
 use App\Repositories\Interfaces\ExamRepositoryInterface;
+use App\Services\Interfaces\IDGenerate\IDGenerateServiceInterface;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class ExamRepository implements ExamRepositoryInterface
 {
+    /**
+     * @var IDGenerateServiceInterface
+     */
+    private IDGenerateServiceInterface $IDGenerateService;
 
     /**
-     * @return mixed
+     * @param IDGenerateServiceInterface $IDGenerateService
      */
-    public function getAllExams()
+    public function __construct(IDGenerateServiceInterface $IDGenerateService)
     {
-        // TODO: Implement getAllExams() method.
+        $this->IDGenerateService = $IDGenerateService;
     }
 
     /**
-     * @param array $request
+     * @param Request $request
      * @return mixed
      */
-    public function createExam(array $request)
+    public function getAllExams(Request $request)
     {
-        // TODO: Implement createExam() method.
+        if ($request->date != null) {
+            return Exam::query()->with(['class', 'subject', 'class', 'branch'])
+                ->whereYear('date', data_get($request, 'date'))
+                ->orderBy('date', 'asc')
+                ->get();
+        }
+
+        return Exam::query()->with(['class', 'subject', 'class', 'branch'])
+            ->whereYear('date', Carbon::now()->year)
+            ->orderBy('date', 'asc')
+            ->get();
     }
 
     /**
-     * @param $exam
+     * @param Request $request
      * @return mixed
      */
-    public function getExamById($exam)
+    public function getAllExamsByMonth(Request $request)
     {
-        // TODO: Implement getExamById() method.
+        if ($request->date != null) {
+            return Exam::query()->with(['class', 'subject', 'class', 'branch'])
+                ->whereYear('date', data_get($request, 'date'))
+                ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
+                ->orderBy('date', 'asc')
+                ->get();
+        }
+
+        return Exam::query()->with(['class', 'subject', 'class', 'branch'])
+            ->whereYear('date', Carbon::now()->year)
+            ->whereMonth('date', Carbon::now()->month)
+            ->orderBy('date', 'asc')
+            ->get();
     }
 
     /**
-     * @param array $request
-     * @param $exam
+     * @param StoreExamRequest $request
      * @return mixed
      */
-    public function updateExam(array $request, $exam)
+    public function createExam(StoreExamRequest $request)
     {
-        // TODO: Implement updateExam() method.
+        return Exam::query()->create([
+            'examID' => $this->IDGenerateService->examID(),
+            'exam' => data_get($request, 'exam'),
+            'date' => data_get($request, 'date'),
+            'classID' => data_get($request, 'classID'),
+            'subjectID' => data_get($request, 'subjectID'),
+            'categoryID' => data_get($request, 'categoryID'),
+            'branchID' => data_get($request, 'branchID'),
+        ]);
     }
 
     /**
-     * @param $exam
+     * @param Exam $exam
      * @return mixed
      */
-    public function forceDeleteExam($exam)
+    public function getExamById(Exam $exam)
     {
-        // TODO: Implement forceDeleteExam() method.
+        return Exam::query()->find($exam);
+    }
+
+    /**
+     * @param UpdateExamRequest $request
+     * @param Exam $exam
+     * @return mixed
+     * @throws Exception
+     */
+    public function updateExam(UpdateExamRequest $request, Exam $exam)
+    {
+        $updated = $exam->update([
+            'exam' => data_get($request, 'exam', $exam->exam),
+            'date' => data_get($request, 'date', $exam->date),
+            'classID' => data_get($request, 'classID', $exam->classID),
+            'subjectID' => data_get($request, 'subjectID', $exam->subjectID),
+            'categoryID' => data_get($request, 'categoryID', $exam->categoryID),
+            'branchID' => data_get($request, 'branchID', $exam->branchID),
+        ]);
+
+        if (!$updated) {
+            throw new Exception('Failed to update Exam: ' . $exam->examID);
+        }
+
+        return $exam;
+    }
+
+    /**
+     * @param Exam $exam
+     * @return mixed
+     * @throws Exception
+     */
+    public function forceDeleteExam(Exam $exam)
+    {
+        $deleted = $exam->delete();
+
+        if (!$deleted){
+            throw new Exception('Failed to delete Exam: ' . $exam->examID);
+        }
+
+        return $deleted;
     }
 }

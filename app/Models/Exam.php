@@ -47,13 +47,28 @@ class Exam extends Model
     public $timestamps = false;
 
     /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
      */
     protected $casts = [
-        'date' => 'datetime:Y-m-d',
+        'date' => 'timestamp:Y-m-d'
     ];
+
+    /**
+     * Get the exam that owns the branch.
+     */
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class, 'branchID', 'branchID');
+    }
 
     /**
      * Get the class that owns the exam.
@@ -84,7 +99,8 @@ class Exam extends Model
      */
     public function students(): BelongsToMany
     {
-        return $this->belongsToMany(Student::class)->using(Mark::class)->as('result')
+        return $this->belongsToMany(Student::class, 'mark', 'classID', 'studentID')
+            ->using(Mark::class)->as('result')
             ->withPivot('mark');
     }
 }
