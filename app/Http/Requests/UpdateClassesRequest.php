@@ -32,7 +32,7 @@ class UpdateClassesRequest extends FormRequest
     public function rules()
     {
         return [
-            'className' => ['required', 'string', 'regex:/^[a-zA-Z\s\d\.\-\:\(\)\/]+$/i', 'min:5', 'max:100'],
+            'className' => ['required', 'string', 'regex:/^[a-zA-Z\s\d\.\-\:\(\)\/\_]+$/i', 'min:5', 'max:100'],
             'day' => ['required', Rule::in(['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']), 'string', 'max:10'],
             'startTime' => ['required', 'date_format:H:i'],
             'endTime' => ['required', 'date_format:H:i', 'after:startTime'],
