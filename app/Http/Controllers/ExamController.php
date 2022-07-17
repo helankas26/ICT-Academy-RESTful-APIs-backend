@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\AdvanceResource;
 use App\Http\Resources\ExamCollection;
 use App\Http\Resources\ExamResource;
 use App\Models\Exam;

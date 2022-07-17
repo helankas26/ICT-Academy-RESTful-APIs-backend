@@ -25,6 +25,7 @@ class ExamResource extends JsonResource
         return [
             'examID' => $this->examID,
             'exam' => $this->exam,
+            'totalMark' => $this->totalMark,
             'date' => $this->date,
             'class' => [
                 'classID' => $this->class->classID,

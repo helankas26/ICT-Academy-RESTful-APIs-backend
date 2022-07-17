@@ -54,6 +54,15 @@ class Exam extends Model
     protected $guarded = [];
 
     /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'totalMark' => 100
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>

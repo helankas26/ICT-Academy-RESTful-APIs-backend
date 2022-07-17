@@ -33,6 +33,7 @@ class StoreExamRequest extends FormRequest
     {
         return [
             'exam' => ['required', 'string', 'min:5', 'max:100'],
+            'totalMark' => ['nullable', 'integer'],
             'date' => ['required', 'date'],
             'classID' => ['required', Rule::exists('classes', 'classID'), 'string', 'size:8'],
             'subjectID' => ['required', Rule::exists('subjects', 'subjectID'), 'string', 'size:8'],

@@ -75,6 +75,7 @@ class ExamRepository implements ExamRepositoryInterface
         return Exam::query()->create([
             'examID' => $this->IDGenerateService->examID(),
             'exam' => data_get($request, 'exam'),
+            'totalMark' => data_get($request, 'totalMark'),
             'date' => data_get($request, 'date'),
             'classID' => data_get($request, 'classID'),
             'subjectID' => data_get($request, 'subjectID'),
@@ -102,6 +103,7 @@ class ExamRepository implements ExamRepositoryInterface
     {
         $updated = $exam->update([
             'exam' => data_get($request, 'exam', $exam->exam),
+            'totalMark' => data_get($request, 'totalMark', $exam->totalMark),
             'date' => data_get($request, 'date', $exam->date),
             'classID' => data_get($request, 'classID', $exam->classID),
             'subjectID' => data_get($request, 'subjectID', $exam->subjectID),

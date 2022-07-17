@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('exams', function (Blueprint $table) {
             $table->char('examID', 8);
             $table->string('exam', 100);
+            $table->smallInteger('totalMark')->default(100);
             $table->date('date');
             $table->char('classID', 8);
             $table->char('subjectID', 8);
