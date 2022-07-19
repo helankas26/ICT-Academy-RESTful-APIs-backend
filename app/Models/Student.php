@@ -93,7 +93,8 @@ class Student extends Model
      */
     public function exams(): BelongsToMany
     {
-        return $this->belongsToMany(Exam::class)->using(Mark::class)->as('result')
+        return $this->belongsToMany(Exam::class, 'mark', 'studentID', 'examID')
+            ->using(Mark::class)->as('result')
             ->withPivot('mark');
     }
 

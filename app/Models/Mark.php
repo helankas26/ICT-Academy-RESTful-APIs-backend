@@ -13,26 +13,26 @@ class Mark extends Pivot
      */
     protected $table = 'mark';
 
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'examID';
-
-    /**
-     * Indicates if the model's ID is auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
-     * The data type of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'string';
+//    /**
+//     * The primary key associated with the table.
+//     *
+//     * @var string
+//     */
+//    protected $primaryKey = 'examID';
+//
+//    /**
+//     * Indicates if the model's ID is auto-incrementing.
+//     *
+//     * @var bool
+//     */
+//    public $incrementing = false;
+//
+//    /**
+//     * The data type of the auto-incrementing ID.
+//     *
+//     * @var string
+//     */
+//    protected $keyType = 'string';
 
     /**
      * Indicates if the model should be timestamped.
@@ -47,7 +47,7 @@ class Mark extends Pivot
      * @var array
      */
     protected $attributes = [
-        'mark' => '0'
+        'mark' => 'Ab'
     ];
 
     /**
@@ -56,6 +56,13 @@ class Mark extends Pivot
      * @var array<string, string>
      */
     protected $casts = [
-        'mark' => 'integer',
+        'mark' => 'string'
     ];
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 }

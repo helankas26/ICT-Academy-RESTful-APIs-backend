@@ -16,11 +16,13 @@ return new class extends Migration
         Schema::create('mark', function (Blueprint $table) {
             $table->char('examID', 8);
             $table->char('studentID', 11);
-            $table->smallInteger('mark')->default(0);
+            $table->string('mark', 3)->default("Ab")->comment('Absent = Ab');
             $table->foreign('examID')->references('examID')->on('exams')->cascadeOnDelete();
             $table->foreign('studentID')->references('studentID')->on('students')->cascadeOnDelete();
             $table->primary(['examID', 'studentID']);
         });
+
+        DB::statement('ALTER TABLE mark ADD CHECK (mark IN ("Ab") OR mark >= 0);');
     }
 
     /**
