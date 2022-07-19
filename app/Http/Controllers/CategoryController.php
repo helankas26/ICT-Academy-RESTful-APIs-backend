@@ -9,7 +9,6 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -55,18 +54,24 @@ class CategoryController extends Controller
      * Display the specified resource.
      *
      * @param Category $category
-     * @param Request $request
      * @return CategoryCollection
      */
-    public function show(Category $category, Request $request)
+    public function show(Category $category)
     {
-        if ($request->routeIs('categories.show.subjects')) {
-            $category = $this->categoryRepository->getSubjectsByCategoryId($category);
-
-            return new CategoryCollection($category);
-        }
-
         $category = $this->categoryRepository->getCategoryById($category);
+
+        return new CategoryCollection($category);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param Category $category
+     * @return CategoryCollection
+     */
+    public function showSubjects(Category $category)
+    {
+        $category = $this->categoryRepository->getSubjectsByCategoryId($category);
 
         return new CategoryCollection($category);
     }

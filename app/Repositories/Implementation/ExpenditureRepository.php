@@ -20,30 +20,18 @@ class ExpenditureRepository implements ExpenditureRepositoryInterface
     public function getAllExpenditures(Request $request)
     {
         if ($request->date != null) {
-            $expenditures = Expenditure::query()->with(['staff', 'branch'])
+            return Expenditure::query()->with(['staff', 'branch'])
                 ->whereYear('date', data_get($request, 'date'))
                 ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
                 ->orderBy('date', 'asc')
                 ->get();
-
-            if ($expenditures->isEmpty()) {
-                throw new Exception('Failed to retrieve Expenditures');
-            }
-
-            return $expenditures;
         }
 
-        $expenditures = Expenditure::query()->with(['staff', 'branch'])
+        return Expenditure::query()->with(['staff', 'branch'])
             ->whereYear('date', Carbon::now()->year)
             ->whereMonth('date', Carbon::now()->month)
             ->orderBy('date', 'asc')
             ->get();
-
-        if ($expenditures->isEmpty()) {
-            throw new Exception('Failed to retrieve Expenditures');
-        }
-
-        return $expenditures;
     }
 
     /**

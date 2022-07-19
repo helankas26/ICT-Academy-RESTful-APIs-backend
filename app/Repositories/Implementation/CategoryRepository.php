@@ -30,13 +30,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function getAllCategories()
     {
-        $categories = Category::query()->orderBy('categoryID', 'asc')->get();
-
-        if ($categories->isEmpty()){
-            throw new Exception('Failed to retrieve Category');
-        }
-
-        return $categories;
+        return Category::query()->orderBy('categoryID', 'asc')->get();
     }
 
     /**

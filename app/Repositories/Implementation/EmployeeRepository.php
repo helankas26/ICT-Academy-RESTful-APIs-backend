@@ -20,16 +20,10 @@ class EmployeeRepository implements EmployeeRepositoryInterface
      */
     public function getAllEmployees(Request $request)
     {
-        $employees = Employee::query()->with(['employable', 'person'])
+        return Employee::query()->with(['employable', 'person'])
             ->join('people', 'employees.employeeID', 'people.personID')
             ->where('people.status', data_get($request, 'status'))
             ->get();
-
-        if ($employees->isEmpty()){
-            throw new Exception('Failed to retrieve Employee');
-        }
-
-        return $employees;
     }
 
     /**

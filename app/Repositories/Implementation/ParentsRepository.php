@@ -16,13 +16,7 @@ class ParentsRepository implements ParentsRepositoryInterface
      */
     public function getAllParents()
     {
-        $parents = Parents::query()->get();
-
-        if ($parents->isEmpty()){
-            throw new Exception('Failed to retrieve Parent');
-        }
-
-        return $parents;
+        return Parents::query()->get();
     }
 
     /**

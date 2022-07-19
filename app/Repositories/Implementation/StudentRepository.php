@@ -34,16 +34,10 @@ class StudentRepository implements StudentRepositoryInterface
      */
     public function getAllStudents(Request $request)
     {
-        $students =  Student::query()->with('person', 'parent')
+        return Student::query()->with(['person', 'parent'])
             ->join('people', 'students.studentID', 'people.personID')
             ->where('people.status', data_get($request, 'status'))
             ->get();
-
-        if ($students->isEmpty()){
-            throw new Exception('Failed to retrieve Students');
-        }
-
-        return $students;
     }
 
     /**

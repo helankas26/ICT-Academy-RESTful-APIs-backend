@@ -85,7 +85,7 @@ class AttendanceController extends Controller
     public function showByStudent(Request $request, Student $student)
     {
         $request->validate([
-            'classID' => ['required', Rule::exists('classes', 'classID')],
+            'classID' => ['required', Rule::exists('classes', 'classID'), 'string', 'size:8'],
             'date' => ['required', 'date']
         ]);
 
@@ -140,7 +140,7 @@ class AttendanceController extends Controller
     public function destroyByStudent(Request $request, Student $student)
     {
         $request->validate([
-            'classID' => ['required', Rule::exists('classes', 'classID')],
+            'classID' => ['required', Rule::exists('classes', 'classID'), 'string', 'size:8'],
             'date' => ['required', 'date']
         ]);
 

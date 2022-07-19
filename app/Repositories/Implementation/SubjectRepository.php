@@ -30,13 +30,7 @@ class SubjectRepository implements SubjectRepositoryInterface
      */
     public function getAllSubjects()
     {
-        $subjects = Subject::query()->with('category')->get();
-
-        if ($subjects->isEmpty()){
-            throw new Exception('Failed to retrieve Subject');
-        }
-
-        return $subjects;
+        return Subject::query()->with('category')->get();
     }
 
     /**

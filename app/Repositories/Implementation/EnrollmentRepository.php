@@ -22,13 +22,7 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
      */
     public function getAllStudentsEnrollments()
     {
-        $enrollments = Student::query()->has('classes')->with(['classes', 'person'])->get();
-
-        if ($enrollments->isEmpty()){
-            throw new Exception('Failed to retrieve Enrollment of Students');
-        }
-
-        return $enrollments;
+        return Student::query()->has('classes')->with(['classes', 'person'])->get();
     }
 
     /**
@@ -70,11 +64,11 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
      */
     public function attachStudentEnrollments(StoreEnrollmentRequest $request)
     {
-        return DB::transaction(function () use ($request) {
+        $student = Student::query()->find(data_get($request, 'studentID'));
 
-            $student = Student::query()->find(data_get($request, 'studentID'));
+        $classes = Classes::query()->findMany(data_get($request, 'classID'));
 
-            $classes = Classes::query()->findMany(data_get($request, 'classID'));
+        return DB::transaction(function () use ($request, $student, $classes) {
 
             foreach ($classes as $class) {
                 $student->classes()->attach($class, [
@@ -105,16 +99,10 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
     {
         $enrollment = Enrollment::query()->where('studentID', $student->studentID)->pluck('classID');
 
-        $classes = Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+        return Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
             ->where('status', 'Active')
             ->whereNotIn('classID', $enrollment)
             ->get();
-
-        if ($classes->isEmpty()){
-            throw new Exception('Failed to retrieve Classes');
-        }
-
-        return $classes;
     }
 
     /**
@@ -163,9 +151,9 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
      */
     public function updateStudentStatusForAll(UpdateEnrollmentRequest $request, Student $student)
     {
-        return DB::transaction(function () use ($request, $student) {
+        $student = Student::query()->find($student->studentID);
 
-            $student = Student::query()->find($student->studentID);
+        return DB::transaction(function () use ($request, $student) {
 
             $student->classes()->newPivotStatement()->where('enrollment.studentID', $student->studentID)
                 ->update([
@@ -223,7 +211,7 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
     {
         $student = Student::query()->find($student->studentID);
 
-        $deleted =  $student->classes()->detach(data_get($request, 'classID'));
+        $deleted = $student->classes()->detach(data_get($request, 'classID'));
 
         if (!$deleted){
             throw new Exception('Failed to detach Enrollment of: ' . $student->studentID);
@@ -238,13 +226,7 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
      */
     public function getAllClassesEnrollments()
     {
-        $enrollments = Classes::query()->has('students')->with(['students', 'students.person'])->get();
-
-        if ($enrollments->isEmpty()){
-            throw new Exception('Failed to retrieve Enrollment of Classes');
-        }
-
-        return $enrollments;
+        return Classes::query()->has('students')->with(['students', 'students.person'])->get();
     }
 
     /**
@@ -254,9 +236,9 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
      */
     public function attachClassEnrollments(StoreEnrollmentRequest $request)
     {
-        return DB::transaction(function () use ($request) {
+        $class = Classes::query()->find(data_get($request, 'classID'));
 
-            $class = Classes::query()->find(data_get($request, 'classID'));
+        return DB::transaction(function () use ($request, $class) {
 
             $class->students()->attach(data_get($request, 'studentID'), [
                 'paymentStatus' => $class->feeType != 'Monthly' ? 0 : 1,
@@ -285,17 +267,11 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
     {
         $enrollment = Enrollment::query()->where('classID', $class->classID)->pluck('studentID');
 
-        $students = Student::query()->with('person')
+        return Student::query()->with('person')
             ->join('people', 'students.studentID', 'people.personID')
             ->where('people.status', 'Active')
             ->whereNotIn('studentID', $enrollment)
             ->get();
-
-        if ($students->isEmpty()){
-            throw new Exception('Failed to retrieve Students');
-        }
-
-        return $students;
     }
 
     /**
@@ -336,12 +312,12 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
      */
     public function updateMonthlyClassesPaymentStatus()
     {
-        return DB::transaction(function () {
+        $classes = Classes::query()->whereHas('students')
+            ->where('feeType', 'Monthly')
+            ->where('status', 'Active')
+            ->get();
 
-            $classes = Classes::query()->whereHas('students')
-                ->where('feeType', 'Monthly')
-                ->where('status', 'Active')
-                ->get();
+        return DB::transaction(function () use ($classes) {
 
             foreach ($classes as $class) {
                 $class->students()
@@ -360,12 +336,12 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
      */
     public function updateMonthlyClassesPaymentStatusDecrement()
     {
-        return DB::transaction(function () {
+        $classes = Classes::query()->whereHas('students')
+            ->where('feeType', 'Monthly')
+            ->where('status', 'Active')
+            ->get();
 
-            $classes = Classes::query()->whereHas('students')
-                ->where('feeType', 'Monthly')
-                ->where('status', 'Active')
-                ->get();
+        return DB::transaction(function () use ($classes) {
 
             foreach ($classes as $class) {
                 $class->students()
@@ -386,9 +362,9 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
      */
     public function updateClassStatusForAll(UpdateEnrollmentRequest $request, Classes $class)
     {
-        return DB::transaction(function () use ($request, $class) {
+        $class = Classes::query()->find($class->classID);
 
-            $class = Classes::query()->find($class->classID);
+        return DB::transaction(function () use ($request, $class) {
 
             $class->students()->newPivotStatement()->where('enrollment.classID', $class->classID)
                 ->update([
@@ -409,7 +385,7 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
     {
         $class = Classes::query()->find($class->classID);
 
-        $deleted =  $class->students()->detach(data_get($request, 'studentID'));
+        $deleted = $class->students()->detach(data_get($request, 'studentID'));
 
         if (!$deleted){
             throw new Exception('Failed to detach Enrollment of: ' . $class->classID);

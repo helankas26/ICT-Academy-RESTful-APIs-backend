@@ -34,17 +34,11 @@ class StaffRepository implements StaffRepositoryInterface
      */
     public function getAllStaffs(Request $request)
     {
-        $staffs = Staff::query()->with(['employee', 'employee.person'])
+        return Staff::query()->with(['employee', 'employee.person'])
             ->join('employees', 'staff.staffID', 'employees.employeeID')
             ->join('people', 'employees.employeeID', 'people.personID')
             ->where('people.status', data_get($request, 'status'))
             ->get();
-
-        if ($staffs->isEmpty()){
-            throw new Exception('Failed to retrieve Staff');
-        }
-
-        return $staffs;
     }
 
     /**

@@ -32,8 +32,8 @@ class StoreAttendanceRequest extends FormRequest
     public function rules()
     {
         return [
-            'studentID' => ['nullable', Rule::exists('students', 'studentID')],
-            'classID' => ['required', Rule::exists('classes', 'classID')],
+            'studentID' => ['nullable', Rule::exists('students', 'studentID'), 'string', 'size:11'],
+            'classID' => ['required', Rule::exists('classes', 'classID'), 'string', 'size:8'],
             'date' => ['nullable', 'date'],
             'time' => ['nullable', 'date_format:H:i'],
             'attendStatus' => ['nullable', Rule::in(['0', '1']), 'integer']

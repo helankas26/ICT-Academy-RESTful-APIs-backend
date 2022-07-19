@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ParentsCollection;
 use App\Http\Resources\ParentsResource;
-use App\Http\Resources\StudentResource;
 use App\Models\Parents;
 use App\Http\Requests\StoreParentsRequest;
 use App\Http\Requests\UpdateParentsRequest;

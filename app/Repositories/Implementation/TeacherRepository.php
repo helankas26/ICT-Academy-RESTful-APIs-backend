@@ -34,17 +34,11 @@ class TeacherRepository implements TeacherRepositoryInterface
      */
     public function getAllTeachers(Request $request)
     {
-        $teachers = Teacher::query()->with(['employee', 'employee.person'])
+        return Teacher::query()->with(['employee', 'employee.person'])
             ->join('employees', 'teachers.teacherID', 'employees.employeeID')
             ->join('people', 'employees.employeeID', 'people.personID')
             ->where('people.status', data_get($request, 'status'))
             ->get();
-
-        if ($teachers->isEmpty()){
-            throw new Exception('Failed to retrieve Teacher');
-        }
-
-        return $teachers;
     }
 
     /**

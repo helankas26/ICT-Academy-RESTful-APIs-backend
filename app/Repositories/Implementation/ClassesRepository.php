@@ -32,41 +32,31 @@ class ClassesRepository implements ClassesRepositoryInterface
      */
     public function getAllClasses(Request $request)
     {
+        if ($request->feeType != null && $request->day != null) {
+            return Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+                ->where('status', data_get($request, 'status'))
+                ->where('feeType', data_get($request, 'feeType'))
+                ->where('day', data_get($request, 'day'))
+                ->get();
+        }
+
         if ($request->feeType != null) {
-            $classes = Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+            return Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
                 ->where('status', data_get($request, 'status'))
                 ->where('feeType', data_get($request, 'feeType'))
                 ->get();
-
-            if ($classes->isEmpty()){
-                throw new Exception('Failed to retrieve Class');
-            }
-
-            return $classes;
         }
 
         if ($request->day != null) {
-            $classes = Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+            return Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
                 ->where('status', data_get($request, 'status'))
                 ->where('day', data_get($request, 'day'))
                 ->get();
-
-            if ($classes->isEmpty()){
-                throw new Exception('Failed to retrieve Class');
-            }
-
-            return $classes;
         }
 
-        $classes = Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+        return Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
             ->where('status', data_get($request, 'status'))
             ->get();
-
-        if ($classes->isEmpty()){
-            throw new Exception('Failed to retrieve Class');
-        }
-
-        return $classes;
     }
 
     /**

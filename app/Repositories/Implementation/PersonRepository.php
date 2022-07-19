@@ -21,18 +21,12 @@ class PersonRepository implements PersonRepositoryInterface
      */
     public function getAllPeople(Request $request)
     {
-        $people = Person::query()->with(['personable' => function (MorphTo $morphTo) {
+        return Person::query()->with(['personable' => function (MorphTo $morphTo) {
                 $morphTo->morphWith([
                     Employee::class => ['employable'],
                     Parents::class => ['parent']
                 ]);
             }])->where('people.status', data_get($request, 'status'))->get();
-
-        if ($people->isEmpty()){
-            throw new Exception('Failed to retrieve Students');
-        }
-
-        return $people;
     }
 
     /**

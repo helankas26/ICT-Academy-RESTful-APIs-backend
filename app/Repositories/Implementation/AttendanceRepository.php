@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class AttendanceRepository implements AttendanceRepositoryInterface
 {
@@ -52,7 +53,7 @@ class AttendanceRepository implements AttendanceRepositoryInterface
      */
     public function getStudentAttendanceById(Request $request, Student $student)
     {
-        return Attendance::query()->with('class', 'student.person')
+        return Attendance::query()->with(['class', 'student.person'])
             ->join('enrollment', function ($join) {
                 $join->on('attendances.studentID', 'enrollment.studentID')
                     ->on('attendances.classID', 'enrollment.classID')
@@ -112,7 +113,7 @@ class AttendanceRepository implements AttendanceRepositoryInterface
     /**
      * @param StoreAttendanceRequest $request
      * @return mixed
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function addClassToAttendance(StoreAttendanceRequest $request)
     {
@@ -123,12 +124,11 @@ class AttendanceRepository implements AttendanceRepositoryInterface
             ->where('status', '1')
             ->pluck("studentID");
 
-       $attendance = array();
+        $attendance = array();
 
         foreach ($students as $student) {
             $attendance[] = [
                 'studentID' => $student,
-                'classID' => $class->classID,
                 'date' => Carbon::now()->format('Y-m-d')
             ];
         }

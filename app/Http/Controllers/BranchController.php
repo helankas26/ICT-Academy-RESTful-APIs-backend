@@ -90,7 +90,7 @@ class BranchController extends Controller
         return new JsonResponse([
             'success' => $deleted,
             'status' => 'deleted',
-            'data' => $branch,
+            'data' => new BranchResource($branch),
         ]);
     }
 }

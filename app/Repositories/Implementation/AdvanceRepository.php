@@ -20,34 +20,22 @@ class AdvanceRepository implements AdvanceRepositoryInterface
     public function getAllAdvances(Request $request)
     {
         if ($request->date != null) {
-            $advances = Advance::query()->with(['employee', 'staff', 'branch'])
+            return Advance::query()->with(['employee', 'staff', 'branch'])
                 ->join('employees', 'advances.employeeID' , 'employees.employeeID')
                 ->where('employees.employeeType', data_get($request, 'employeeType'))
                 ->whereYear('date', data_get($request, 'date'))
                 ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
                 ->orderBy('date', 'asc')
                 ->get();
-
-            if ($advances->isEmpty()) {
-                throw new Exception('Failed to retrieve Advances');
-            }
-
-            return $advances;
         }
 
-        $advances = Advance::query()->with(['employee', 'staff', 'branch'])
+        return Advance::query()->with(['employee', 'staff', 'branch'])
             ->join('employees', 'advances.employeeID' , 'employees.employeeID')
             ->where('employees.employeeType', data_get($request, 'employeeType'))
             ->whereYear('date', Carbon::now()->year)
             ->whereMonth('date', Carbon::now()->month)
             ->orderBy('date', 'asc')
             ->get();
-
-        if ($advances->isEmpty()) {
-            throw new Exception('Failed to retrieve Advances');
-        }
-
-        return $advances;
     }
 
     /**
