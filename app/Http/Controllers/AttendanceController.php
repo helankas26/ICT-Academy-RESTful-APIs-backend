@@ -7,6 +7,7 @@ use App\Http\Resources\AttendanceCollection;
 use App\Http\Resources\AttendanceResource;
 use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\UpdateAttendanceRequest;
+use App\Http\Resources\AttendedStudentResource;
 use App\Models\Classes;
 use App\Models\Student;
 use App\Repositories\Interfaces\AttendanceRepositoryInterface;
@@ -113,13 +114,83 @@ class AttendanceController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param Request $request
+     * @param Classes $class
+     * @return JsonResponse
+     */
+    public function showAttendByClass(Request $request, Classes $class)
+    {
+        $request->validate([
+            'date' => ['required', 'date']
+        ]);
+
+        $classes = $this->attendanceRepository->getClassAttendanceById($request, $class);
+
+        $present = array();
+        $absent = array();
+
+        foreach ($classes as $class) {
+            foreach ($class->attendances as $student) {
+                if ($student->attendStatus == 1) {
+                    $present[] = $student;
+                } else {
+                    $absent[] = $student;
+                }
+            }
+        }
+
+        return new JsonResponse([
+            'classID' => $class->classID,
+            'className' => $class->className,
+            'present' => AttendedStudentResource::collection($present),
+            'absent' => AttendedStudentResource::collection($absent),
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param Request $request
+     * @param Classes $class
+     * @return JsonResponse
+     */
+    public function showAttendCount(Request $request, Classes $class)
+    {
+        $request->validate([
+            'date' => ['required', 'date']
+        ]);
+
+        $attendances = $this->attendanceRepository->getClassAttendCount($request, $class);
+
+        $present = 0;
+        $absent = 0;
+
+        foreach ($attendances as $attendance) {
+            if ($attendance->attendStatus == 1) {
+                ++$present;
+            } else {
+                ++$absent;
+            }
+        }
+
+        return new JsonResponse([
+            'success' => true,
+            'classID' => $class->classID,
+            'present_count' => $present,
+            'absent_count' => $absent,
+        ]);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param UpdateAttendanceRequest $request
      * @param Student $student
      * @return JsonResponse
      */
-    public function update(UpdateAttendanceRequest $request, Student $student)
+    public function updateByStudent(UpdateAttendanceRequest $request, Student $student)
     {
         $updated = $this->attendanceRepository->updateMarkStudentAttendance($request, $student);
 
@@ -127,6 +198,25 @@ class AttendanceController extends Controller
             'success' => $updated > 0,
             'status' => 'updated',
             'attendStatus' => data_get($request, 'attendStatus'),
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param UpdateAttendanceRequest $request
+     * @param Classes $class
+     * @return JsonResponse
+     */
+    public function updateByClass(UpdateAttendanceRequest $request, Classes $class)
+    {
+        $updated = $this->attendanceRepository->updateMarkClassAttendance($request, $class);
+
+        return new JsonResponse([
+            'success' => $updated > 0,
+            'status' => 'updated',
+            'attendStatus' => data_get($request, 'attendStatus'),
+            'attendance_count' => $updated
         ]);
     }
 

@@ -33,7 +33,7 @@ class UpdateAttendanceRequest extends FormRequest
     {
         return [
             'studentID' => ['nullable', Rule::exists('students', 'studentID'), 'string', 'size:11'],
-            'classID' => ['required', Rule::exists('classes', 'classID'), 'string', 'size:8'],
+            'classID' => ['nullable', Rule::exists('classes', 'classID'), 'string', 'size:8'],
             'date' => ['required', 'date'],
             'time' => ['nullable', 'date_format:H:i'],
             'attendStatus' => ['required', Rule::in(['0', '1']), 'integer']

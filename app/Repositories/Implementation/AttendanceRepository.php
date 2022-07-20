@@ -162,6 +162,41 @@ class AttendanceRepository implements AttendanceRepositoryInterface
      * @param Request $request
      * @param Classes $class
      * @return mixed
+     */
+    public function getClassAttendCount(Request $request, Classes $class)
+    {
+        return Attendance::query()
+            ->where('classID', $class->classID)
+            ->where('date', data_get($request, 'date'))
+            ->get();
+    }
+
+    /**
+     * @param UpdateAttendanceRequest $request
+     * @param Classes $class
+     * @return mixed
+     * @throws Exception
+     */
+    public function updateMarkClassAttendance(UpdateAttendanceRequest $request, Classes $class)
+    {
+        $updated = $class->attendances()
+            ->where('attendances.date', data_get($request, 'date'))
+            ->update([
+                'time' => data_get($request, 'attendStatus') != 0 ? Carbon::now()->format('h:i:s') : null,
+                'attendStatus' => data_get($request, 'attendStatus'),
+            ]);
+
+        if (!$updated) {
+            throw new Exception('Failed to update class\'s attendance: ' . $request->classID . ', ' .  $request->date);
+        }
+
+        return $updated;
+    }
+
+    /**
+     * @param Request $request
+     * @param Classes $class
+     * @return mixed
      * @throws Exception
      */
     public function removeClassAttendance(Request $request, Classes $class)

@@ -61,5 +61,19 @@ interface AttendanceRepositoryInterface
      * @param Classes $class
      * @return mixed
      */
+    public function getClassAttendCount(Request $request, Classes $class);
+
+    /**
+     * @param UpdateAttendanceRequest $request
+     * @param Classes $class
+     * @return mixed
+     */
+    public function updateMarkClassAttendance(UpdateAttendanceRequest $request, Classes $class);
+
+    /**
+     * @param Request $request
+     * @param Classes $class
+     * @return mixed
+     */
     public function removeClassAttendance(Request $request, Classes $class);
 }
