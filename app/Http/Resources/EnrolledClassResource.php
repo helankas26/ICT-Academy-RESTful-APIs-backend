@@ -25,6 +25,8 @@ class EnrolledClassResource extends JsonResource
         return [
             'classID' => $this->classID,
             'className' => $this->className,
+            'feeType' => $this->feeType,
+            'classFee' => $this->classFee,
             'paymentStatus'=> $this->enrollment->paymentStatus,
             'enrolledDate' => $this->enrollment->enrolledDate,
             'status' => $this->enrollment->status,

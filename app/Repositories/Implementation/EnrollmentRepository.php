@@ -118,7 +118,7 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
         $class = Classes::query()->find($class->classID);
 
         $student->classes()->updateExistingPivot($class, [
-            'paymentStatus' => data_get($request, 'paymentStatus')
+            'paymentStatus' => $request->paymentStatus == -1 ? -1 : ($class->feeType != "Daily" ? data_get($request, 'paymentStatus') : 0)
         ]);
 
         return $student;
