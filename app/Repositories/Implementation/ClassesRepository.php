@@ -34,6 +34,7 @@ class ClassesRepository implements ClassesRepositoryInterface
     {
         if ($request->feeType != null && $request->day != null) {
             return Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+                ->withCount('students')
                 ->where('status', data_get($request, 'status'))
                 ->where('feeType', data_get($request, 'feeType'))
                 ->where('day', data_get($request, 'day'))
@@ -42,6 +43,7 @@ class ClassesRepository implements ClassesRepositoryInterface
 
         if ($request->feeType != null) {
             return Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+                ->withCount('students')
                 ->where('status', data_get($request, 'status'))
                 ->where('feeType', data_get($request, 'feeType'))
                 ->get();
@@ -49,12 +51,14 @@ class ClassesRepository implements ClassesRepositoryInterface
 
         if ($request->day != null) {
             return Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+                ->withCount('students')
                 ->where('status', data_get($request, 'status'))
                 ->where('day', data_get($request, 'day'))
                 ->get();
         }
 
         return Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+            ->withCount('students')
             ->where('status', data_get($request, 'status'))
             ->get();
     }
@@ -91,7 +95,9 @@ class ClassesRepository implements ClassesRepositoryInterface
      */
     public function getClassById(Classes $class)
     {
-        return Classes::query()->with('subject')->find($class);
+        return Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
+            ->withCount('students')
+            ->find($class);
     }
 
     /**

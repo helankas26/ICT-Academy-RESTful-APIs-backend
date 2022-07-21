@@ -33,6 +33,7 @@ class ClassesResource extends JsonResource
             'classFee' => $this->classFee,
             'feeType' => $this->feeType,
             'status' => $this->status,
+            'students_count' => $this->students_count,
             'subject' => new SubjectResource($this->whenLoaded('subject')),
             'category' => $this->category,
             'teacher' => [
