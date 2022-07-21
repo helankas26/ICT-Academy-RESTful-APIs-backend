@@ -136,6 +136,7 @@ class UserRepository implements UserRepositoryInterface
     {
         return User::query()->with(['employee.person', 'employee.employable'])
             ->where('username', $request->username)
+            ->whereNot('status', 'Deactivate')
             ->first();
     }
 
