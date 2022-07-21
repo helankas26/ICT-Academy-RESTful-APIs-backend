@@ -28,7 +28,17 @@ class AttendanceRepository implements AttendanceRepositoryInterface
         return Classes::query()
             ->with(['attendances' => function ($query) use ($request) {
                 $query->where('date', data_get($request, 'date'));
-            }])->whereHas('attendances', function (Builder $query) use ($request) {
+            }])->withCount([
+                'attendances as present_count' => function (Builder $query) use ($request) {
+                    $query->where('attendances.attendStatus', 1)
+                        ->where('attendances.date', data_get($request, 'date'));
+                },
+                'attendances as absent_count' => function (Builder $query) use ($request) {
+                    $query->where('attendances.attendStatus', 0)
+                        ->where('attendances.date', data_get($request, 'date'));
+                }
+            ])
+            ->whereHas('attendances', function (Builder $query) use ($request) {
                 $query->where('date', data_get($request, 'date'));
             })->get();
     }
@@ -152,7 +162,17 @@ class AttendanceRepository implements AttendanceRepositoryInterface
                         ->on('attendances.classID', 'enrollment.classID')
                         ->where('enrollment.status', 1);
                 })->where('date', data_get($request, 'date'));
-            }])->whereHas('attendances', function (Builder $query) use ($request, $class) {
+            }])->withCount([
+                'attendances as present_count' => function (Builder $query) use ($request) {
+                    $query->where('attendances.attendStatus', 1)
+                        ->where('attendances.date', data_get($request, 'date'));
+                },
+                'attendances as absent_count' => function (Builder $query) use ($request) {
+                    $query->where('attendances.attendStatus', 0)
+                        ->where('attendances.date', data_get($request, 'date'));
+                }
+            ])
+            ->whereHas('attendances', function (Builder $query) use ($request, $class) {
                 $query->where('classID', $class->classID)
                     ->where('date', data_get($request, 'date'));
             })->get();

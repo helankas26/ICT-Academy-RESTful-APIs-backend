@@ -23,9 +23,11 @@ class AttendanceClassResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "classID" => $this->classID,
+            'classID' => $this->classID,
             'className' => $this->className,
-            "students" => AttendedStudentResource::collection($this->attendances),
+            'present_count' => $this->present_count,
+            'absent_count' => $this->absent_count,
+            'students' => AttendedStudentResource::collection($this->attendances),
         ];
     }
 
