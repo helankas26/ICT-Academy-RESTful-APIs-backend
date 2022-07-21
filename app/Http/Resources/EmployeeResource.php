@@ -36,12 +36,12 @@ class EmployeeResource extends JsonResource
                 'status' => $this->person->status,
                 'joinedDate' => $this->person->joinedDate,
                 'employee' => [
-                    "employeeID"=> $this->employeeID,
-                    "employeeType"=> $this->employeeType,
-                    "nic"=> $this->nic,
-                    "title"=> $this->title,
-                    "Staff" => [
-                        "staffID" => $this->employable->staffID,
+                    'employeeID' => $this->employeeID,
+                    'employeeType' => $this->employeeType,
+                    'nic' => $this->nic,
+                    'title' => $this->title,
+                    'Staff' => [
+                        'staffID' => $this->employable->staffID,
                         'branch' => [
                             'branchID' => $this->employable->branch->branchID,
                             'branchName' => $this->employable->branch->branchName,
@@ -64,10 +64,10 @@ class EmployeeResource extends JsonResource
             'status' => $this->person->status,
             'joinedDate' => $this->person->joinedDate,
             'employee' => [
-                "employeeID"=> $this->employeeID,
-                "employeeType"=> $this->employeeType,
-                "nic"=> $this->nic,
-                "title"=> $this->title,
+                'employeeID' => $this->employeeID,
+                'employeeType' => $this->employeeType,
+                'nic' => $this->nic,
+                'title' => $this->title,
                 $this->employeeType => $this->employable,
             ]
         ];
