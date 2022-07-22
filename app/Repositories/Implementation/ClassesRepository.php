@@ -101,6 +101,17 @@ class ClassesRepository implements ClassesRepositoryInterface
     }
 
     /**
+     * @param Classes $class
+     * @return mixed
+     */
+    public function getExamsByClassById(Classes $class)
+    {
+        return Classes::query()->with(['exams', 'subject'])
+            ->withCount('students')
+            ->find($class);
+    }
+
+    /**
      * @param UpdateClassesRequest $request
      * @param Classes $class
      * @return mixed

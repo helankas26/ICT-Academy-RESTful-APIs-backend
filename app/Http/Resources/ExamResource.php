@@ -22,6 +22,15 @@ class ExamResource extends JsonResource
      */
     public function toArray($request)
     {
+        if ($request->routeIs('classes.show.exams')) {
+            return [
+                'examID' => $this->examID,
+                'exam' => $this->exam,
+                'totalMark' => $this->totalMark,
+                'date' => $this->date,
+            ];
+        }
+
         return [
             'examID' => $this->examID,
             'exam' => $this->exam,

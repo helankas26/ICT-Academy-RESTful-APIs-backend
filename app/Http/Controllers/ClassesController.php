@@ -73,6 +73,19 @@ class ClassesController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param Classes $class
+     * @return ClassesCollection
+     */
+    public function showExams(Classes $class)
+    {
+        $class = $this->classesRepository->getExamsByClassById($class);
+
+        return new ClassesCollection($class);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param UpdateClassesRequest $request

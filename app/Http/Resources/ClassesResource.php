@@ -33,7 +33,7 @@ class ClassesResource extends JsonResource
             'classFee' => $this->classFee,
             'feeType' => $this->feeType,
             'status' => $this->status,
-            'students_count' => $this->students_count,
+            'students_count' => $this->whenNotNull($this->students_count),
             'subject' => new SubjectResource($this->whenLoaded('subject')),
             'category' => $this->category,
             'teacher' => [
@@ -45,6 +45,7 @@ class ClassesResource extends JsonResource
                 'branchID' => $this->branch->branchID,
                 'branchName' => $this->branch->branchName,
             ],
+            'exams' => ExamResource::collection($this->whenLoaded('exams')),
         ];
     }
 
