@@ -33,13 +33,13 @@ class ExamRepository implements ExamRepositoryInterface
     public function getAllExams(Request $request)
     {
         if ($request->date != null) {
-            return Exam::query()->with(['class', 'subject', 'class', 'branch'])
+            return Exam::query()->with(['class', 'subject', 'category', 'branch'])
                 ->whereYear('date', data_get($request, 'date'))
                 ->orderBy('date', 'asc')
                 ->get();
         }
 
-        return Exam::query()->with(['class', 'subject', 'class', 'branch'])
+        return Exam::query()->with(['class', 'subject', 'category', 'branch'])
             ->whereYear('date', Carbon::now()->year)
             ->orderBy('date', 'asc')
             ->get();
@@ -52,14 +52,14 @@ class ExamRepository implements ExamRepositoryInterface
     public function getAllExamsByMonth(Request $request)
     {
         if ($request->date != null) {
-            return Exam::query()->with(['class', 'subject', 'class', 'branch'])
+            return Exam::query()->with(['class', 'subject', 'category', 'branch'])
                 ->whereYear('date', data_get($request, 'date'))
                 ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
                 ->orderBy('date', 'asc')
                 ->get();
         }
 
-        return Exam::query()->with(['class', 'subject', 'class', 'branch'])
+        return Exam::query()->with(['class', 'subject', 'category', 'branch'])
             ->whereYear('date', Carbon::now()->year)
             ->whereMonth('date', Carbon::now()->month)
             ->orderBy('date', 'asc')
