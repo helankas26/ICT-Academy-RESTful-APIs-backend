@@ -72,7 +72,7 @@ class SubjectController extends Controller
      */
     public function showClasses(Subject $subject)
     {
-        $subject = $this->subjectRepository->getClassesBySubjectById($subject);
+        $subject = $this->subjectRepository->getClassesBySubjectId($subject);
 
         return new SubjectCollection($subject);
     }

@@ -93,7 +93,7 @@ class TeacherRepository implements TeacherRepositoryInterface
      * @param Teacher $teacher
      * @return mixed
      */
-    public function getClassesWithExamByTeacherId(Teacher $teacher)
+    public function getClassesWithExamsByTeacherId(Teacher $teacher)
     {
         return Teacher::query()
             ->with(['employee.person', 'classes.exams'])

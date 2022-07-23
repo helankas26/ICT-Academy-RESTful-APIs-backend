@@ -31,7 +31,7 @@ interface TeacherRepositoryInterface
      * @param Teacher $teacher
      * @return mixed
      */
-    public function getClassesWithExamByTeacherId(Teacher $teacher);
+    public function getClassesWithExamsByTeacherId(Teacher $teacher);
 
     /**
      * @param UpdateTeacherRequest $request

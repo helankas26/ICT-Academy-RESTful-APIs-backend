@@ -78,9 +78,9 @@ class TeacherController extends Controller
      * @param Teacher $teacher
      * @return TeacherResource
      */
-    public function showClassesWithExam(Teacher $teacher)
+    public function showClassesWithExams(Teacher $teacher)
     {
-        $teacher = $this->teacherRepository->getClassesWithExamByTeacherId($teacher);
+        $teacher = $this->teacherRepository->getClassesWithExamsByTeacherId($teacher);
 
         return new TeacherResource($teacher);
     }

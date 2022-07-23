@@ -31,7 +31,7 @@ interface ClassesRepositoryInterface
      * @param Classes $class
      * @return mixed
      */
-    public function getExamsByClassById(Classes $class);
+    public function getExamsByClassId(Classes $class);
 
     /**
      * @param UpdateClassesRequest $request

@@ -29,7 +29,7 @@ interface SubjectRepositoryInterface
      * @param Subject $subject
      * @return mixed
      */
-    public function getClassesBySubjectById(Subject $subject);
+    public function getClassesBySubjectId(Subject $subject);
 
     /**
      * @param UpdateSubjectRequest $request

@@ -104,7 +104,7 @@ class ClassesRepository implements ClassesRepositoryInterface
      * @param Classes $class
      * @return mixed
      */
-    public function getExamsByClassById(Classes $class)
+    public function getExamsByClassId(Classes $class)
     {
         return Classes::query()->with(['exams', 'subject'])
             ->withCount('students')

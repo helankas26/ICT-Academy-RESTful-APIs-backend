@@ -80,7 +80,7 @@ class ClassesController extends Controller
      */
     public function showExams(Classes $class)
     {
-        $class = $this->classesRepository->getExamsByClassById($class);
+        $class = $this->classesRepository->getExamsByClassId($class);
 
         return new ClassesCollection($class);
     }

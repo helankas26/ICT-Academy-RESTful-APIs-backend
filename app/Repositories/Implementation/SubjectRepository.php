@@ -62,7 +62,7 @@ class SubjectRepository implements SubjectRepositoryInterface
      * @param Subject $subject
      * @return mixed
      */
-    public function getClassesBySubjectById(Subject $subject)
+    public function getClassesBySubjectId(Subject $subject)
     {
         return Subject::query()->with('classes')->find($subject);
     }
