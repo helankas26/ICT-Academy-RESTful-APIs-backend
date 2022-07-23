@@ -36,6 +36,7 @@ class TeacherResource extends JsonResource
             'qualification' => $this->qualification,
             'status' => $this->employee->person->status,
             'joinedDate' => $this->employee->person->joinedDate,
+            'classes' => ClassesResource::collection($this->whenLoaded('classes')),
         ];
     }
 

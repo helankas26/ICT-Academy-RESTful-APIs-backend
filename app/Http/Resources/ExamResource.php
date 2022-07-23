@@ -31,6 +31,15 @@ class ExamResource extends JsonResource
             ];
         }
 
+        if ($request->routeIs('teachers.show.classesWithExam')) {
+            return [
+                'examID' => $this->examID,
+                'exam' => $this->exam,
+                'totalMark' => $this->totalMark,
+                'date' => $this->date,
+            ];
+        }
+
         return [
             'examID' => $this->examID,
             'exam' => $this->exam,

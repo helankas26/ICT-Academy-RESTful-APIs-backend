@@ -28,6 +28,12 @@ interface TeacherRepositoryInterface
     public function getTeacherById(Teacher $teacher);
 
     /**
+     * @param Teacher $teacher
+     * @return mixed
+     */
+    public function getClassesWithExamByTeacherId(Teacher $teacher);
+
+    /**
      * @param UpdateTeacherRequest $request
      * @param Teacher $teacher
      * @return mixed

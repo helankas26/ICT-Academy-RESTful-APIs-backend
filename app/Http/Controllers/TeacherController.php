@@ -73,6 +73,19 @@ class TeacherController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param Teacher $teacher
+     * @return TeacherResource
+     */
+    public function showClassesWithExam(Teacher $teacher)
+    {
+        $teacher = $this->teacherRepository->getClassesWithExamByTeacherId($teacher);
+
+        return new TeacherResource($teacher);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param UpdateTeacherRequest $request

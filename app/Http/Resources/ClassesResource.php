@@ -22,6 +22,28 @@ class ClassesResource extends JsonResource
      */
     public function toArray($request)
     {
+        if ($request->routeIs('teachers.show.classesWithExam')) {
+            return [
+                'classID' => $this->classID,
+                'className' => $this->className,
+                'day' => $this->day,
+                'startTime' => date('h:i A', strtotime($this->startTime)),
+                'endTime' => date('h:i A', strtotime($this->endTime)),
+                'grade' => $this->grade,
+                'room' => $this->room,
+                'classFee' => $this->classFee,
+                'feeType' => $this->feeType,
+                'status' => $this->status,
+                'subject' => new SubjectResource($this->subject),
+                'category' => $this->category,
+                'branch' => [
+                    'branchID' => $this->branch->branchID,
+                    'branchName' => $this->branch->branchName,
+                ],
+                'exams' => ExamResource::collection($this->whenLoaded('exams')),
+            ];
+        }
+
         return [
             'classID' => $this->classID,
             'className' => $this->className,
