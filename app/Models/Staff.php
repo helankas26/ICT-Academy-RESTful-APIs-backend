@@ -59,7 +59,7 @@ class Staff extends Model
      */
     public function fees(): HasMany
     {
-        return $this->hasMany(Fee::class, 'staffID', 'staffID');
+        return $this->hasMany(Fee::class, 'handlerStaffID', 'staffID');
     }
 
     /**

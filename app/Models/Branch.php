@@ -99,4 +99,12 @@ class Branch extends Model
     {
         return $this->hasMany(Exam::class, 'branchID', 'branchID');
     }
+
+    /**
+     * Get the fees for the branch.
+     */
+    public function fees(): HasMany
+    {
+        return $this->hasMany(Fee::class, 'branchID', 'branchID');
+    }
 }

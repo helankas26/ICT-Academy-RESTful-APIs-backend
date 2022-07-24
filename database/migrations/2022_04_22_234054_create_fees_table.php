@@ -16,14 +16,17 @@ return new class extends Migration
         Schema::create('fees', function (Blueprint $table) {
             $table->id('feeID');
             $table->char('studentID', 11);
-            $table->char('staffID', 11);
             $table->char('classID', 8);
-            $table->date('date');
             $table->decimal('paidAmount', 7, 2);
-            $table->char('paidStatus',1);
+            $table->date('date');
+            $table->char('paidStatus',1)->default('P')->comment('Current = P, Arrears = A');
+            $table->char('handlerStaffID', 11);
+            $table->char('branchID', 8);
+            $table->softDeletes();
             $table->foreign('studentID')->references('studentID')->on('students');
-            $table->foreign('staffID')->references('staffID')->on('staff');
             $table->foreign('classID')->references('classID')->on('classes');
+            $table->foreign('handlerStaffID')->references('staffID')->on('staff');
+            $table->foreign('branchID')->references('branchID')->on('branches');
             //$table->primary('feeID');
         });
 
