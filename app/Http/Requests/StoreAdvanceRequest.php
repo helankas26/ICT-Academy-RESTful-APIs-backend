@@ -33,7 +33,7 @@ class StoreAdvanceRequest extends FormRequest
     {
         return [
             'description' => ['required', 'string', 'min:3', 'max:100'],
-            'advanceAmount' => ['required', 'string', 'regex:/^[\d]{1,6}[\.][\d]{0,2}$/i', 'max:8'],
+            'advanceAmount' => ['required', 'string', 'regex:/^[\d]{1,6}[\.][\d]{0,2}$/i', 'max:9'],
             'date' => ['required', 'date'],
             'employeeID' => ['required', Rule::exists('employees', 'employeeID'), 'string', 'size:8'],
             'handlerStaffID' => ['required', Rule::exists('staff', 'staffID'), 'string', 'size:8'],
