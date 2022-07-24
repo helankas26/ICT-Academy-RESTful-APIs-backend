@@ -11,6 +11,7 @@ Route::middleware([
     ->group(function (){
         Route::get('/fees', [FeeController::class, 'index'])->name('index');
         Route::get('/fees/trashed', [FeeController::class, 'indexTrashed'])->name('index.trashed');
+        Route::get('/fees/todayCollection', [FeeController::class, 'indexTodayCollection'])->name('index.todayCollection');
         Route::get('/fees/{fee:feeID}', [FeeController::class, 'show'])->name('show');
         Route::post('/students/{student:studentID}/classes/{class:classID}/fees', [FeeController::class, 'storeOne'])->name('store.one');
         Route::post('/students/{student:studentID}/fees', [FeeController::class, 'storeMany'])->name('store.many');

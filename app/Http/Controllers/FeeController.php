@@ -61,6 +61,42 @@ class FeeController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function indexTodayCollection(Request $request)
+    {
+        $request->validate([
+            'date' => ['nullable', 'date']
+        ]);
+
+        $fees = $this->feeRepository->getTodayFeesCollectionsummary($request);
+
+        $arrears = 0;
+        $collection = 0;
+
+        foreach ($fees as $fee) {
+            if ($fee->paidStatus == 'P') {
+                $collection += $fee->paidAmount;
+            }
+
+            if ($fee->paidStatus == 'A') {
+                $arrears += $fee->paidAmount;
+            }
+        }
+
+        $total = $collection + $arrears;
+
+        return new JsonResponse([
+            'success' => true,
+            'collection' => number_format($collection, 2),
+            'arrears' => number_format($arrears, 2),
+            'total' => number_format($total, 2)
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param StoreFeeRequest $request

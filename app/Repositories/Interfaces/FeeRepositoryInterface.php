@@ -24,6 +24,12 @@ interface FeeRepositoryInterface
     public function getAllTrashedFees(Request $request);
 
     /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function getTodayFeesCollectionsummary(Request $request);
+
+    /**
      * @param StoreFeeRequest $request
      * @param Student $student
      * @param Classes $class

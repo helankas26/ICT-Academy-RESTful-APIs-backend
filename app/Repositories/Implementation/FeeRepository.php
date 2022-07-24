@@ -55,6 +55,23 @@ class FeeRepository implements FeeRepositoryInterface
     }
 
     /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function getTodayFeesCollectionsummary(Request $request)
+    {
+        if ($request->date != null) {
+            return Fee::query()
+                ->where('date', data_get($request, 'date'))
+                ->get();
+        }
+
+        return Fee::query()
+            ->where('date', Carbon::now()->format('Y-m-d'))
+            ->get();
+    }
+
+    /**
      * @param StoreFeeRequest $request
      * @param Student $student
      * @param Classes $class
