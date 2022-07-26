@@ -96,7 +96,7 @@ class TeacherRepository implements TeacherRepositoryInterface
     public function getClassesWithExamsByTeacherId(Teacher $teacher)
     {
         return Teacher::query()
-            ->with(['employee.person', 'classes.exams'])
+            ->with(['employee.person', 'classes.subject', 'classes.exams'])
             ->find($teacher->teacherID);
     }
 
