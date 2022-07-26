@@ -39,7 +39,7 @@ class StoreStudentRequest extends FormRequest
             'grade' => ['required', 'string', 'min:1', 'max:5'],
             'telNo' => ['required', 'string', 'size:10'],
             'address' => ['required', 'string', 'min:6', 'max:150'],
-            'email' => ['required', 'email', 'max:50'],
+            'email' => ['nullable', 'email', 'max:50'],
             'status' => ['required', Rule::in(['Active', 'Past']), 'string', 'max:10'],
             'joinedDate' => ['required', 'date'],
             'branchID' => ['required', Rule::exists('branches', 'branchID'), 'string', 'size:8'],

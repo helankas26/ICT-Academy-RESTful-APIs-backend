@@ -22,7 +22,7 @@ return new class extends Migration
             $table->char('sex', 6);
             $table->char('telNo', 10);
             $table->string('address', 150);
-            $table->string('email', 50);
+            $table->string('email', 50)->nullable()->unique();
             $table->char('status', 10)->default('Active');
             $table->date('joinedDate');
             $table->primary('personID');
