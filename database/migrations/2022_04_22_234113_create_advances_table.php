@@ -21,6 +21,7 @@ return new class extends Migration
             $table->char('employeeID', 11);
             $table->char('handlerStaffID', 11);
             $table->char('branchID', 8);
+            $table->softDeletes();
             $table->foreign('employeeID')->references('employeeID')->on('employees');
             $table->foreign('handlerStaffID')->references('staffID')->on('staff');
             $table->foreign('branchID')->references('branchID')->on('branches');

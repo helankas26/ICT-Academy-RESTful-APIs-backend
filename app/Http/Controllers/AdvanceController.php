@@ -46,6 +46,24 @@ class AdvanceController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return AdvanceCollection
+     */
+    public function indexTrashed(Request $request)
+    {
+        $request->validate([
+            'employeeType' => ['required', 'string', 'max:20', Rule::exists('employees', 'employeeType')],
+            'date' => ['nullable', 'date']
+        ]);
+
+        $advances = $this->advanceRepository->getAllTrashedAdvances($request);
+
+        return new AdvanceCollection($advances);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param StoreAdvanceRequest $request
@@ -56,6 +74,26 @@ class AdvanceController extends Controller
         $created = $this->advanceRepository->createAdvance($request);
 
         return new AdvanceResource($created);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param StoreAdvanceRequest $request
+     * @return JsonResponse
+     */
+    public function restore(Request $request, $advanceID)
+    {
+        $request->validate([
+            'handlerStaffID' => ['required', Rule::exists('staff', 'staffID'), 'string', 'size:8']
+        ]);
+
+        $restored = $this->advanceRepository->trashedRestore($request, $advanceID);
+
+        return new JsonResponse([
+            'success' => $restored,
+            'status' => $restored ? 'restored' : 'Failed'
+        ]);
     }
 
     /**
@@ -88,17 +126,38 @@ class AdvanceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param Request $request
      * @param Advance $advance
      * @return JsonResponse
      */
-    public function destroy(Advance $advance)
+    public function destroy(Request $request, Advance $advance)
     {
-        $deleted = $this->advanceRepository->forceDeleteAdvance($advance);
+        $request->validate([
+            'handlerStaffID' => ['required', Rule::exists('staff', 'staffID'), 'string', 'size:8']
+        ]);
+
+        $deleted = $this->advanceRepository->softDeleteAdvance($request, $advance);
 
         return new JsonResponse([
             'success' => $deleted,
             'status' => 'deleted',
             'data' => new AdvanceResource($advance),
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $advanceID
+     * @return JsonResponse
+     */
+    public function destroyTrashed($advanceID)
+    {
+        $deleted = $this->advanceRepository->forceDeleteAdvance($advanceID);
+
+        return new JsonResponse([
+            'success' => $deleted,
+            'status' => $deleted ? 'permanently_deleted' : 'Failed'
         ]);
     }
 }

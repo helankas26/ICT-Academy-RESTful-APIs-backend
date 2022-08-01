@@ -16,10 +16,23 @@ interface AdvanceRepositoryInterface
     public function getAllAdvances(Request $request);
 
     /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function getAllTrashedAdvances(Request $request);
+
+    /**
      * @param StoreAdvanceRequest $request
      * @return mixed
      */
     public function createAdvance(StoreAdvanceRequest $request);
+
+    /**
+     * @param Request $request
+     * @param $advanceID
+     * @return mixed
+     */
+    public function trashedRestore(Request $request, $advanceID);
 
     /**
      * @param Advance $advance
@@ -35,8 +48,15 @@ interface AdvanceRepositoryInterface
     public function updateAdvance(UpdateAdvanceRequest $request, Advance $advance);
 
     /**
+     * @param Request $request
      * @param Advance $advance
      * @return mixed
      */
-    public function forceDeleteAdvance(Advance $advance);
+    public function softDeleteAdvance(Request $request, Advance $advance);
+
+    /**
+     * @param $advanceID
+     * @return mixed
+     */
+    public function forceDeleteAdvance($advanceID);
 }

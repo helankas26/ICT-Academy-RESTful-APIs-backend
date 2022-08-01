@@ -39,6 +39,34 @@ class AdvanceRepository implements AdvanceRepositoryInterface
     }
 
     /**
+     * @param Request $request
+     * @return mixed
+     * @throws Exception
+     */
+    public function getAllTrashedAdvances(Request $request)
+    {
+        if ($request->date != null) {
+            return Advance::onlyTrashed()
+                ->with(['employee', 'staff', 'branch'])
+                ->join('employees', 'advances.employeeID' , 'employees.employeeID')
+                ->where('employees.employeeType', data_get($request, 'employeeType'))
+                ->whereYear('date', data_get($request, 'date'))
+                ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
+                ->orderBy('date', 'asc')
+                ->get();
+        }
+
+        return Advance::onlyTrashed()
+            ->with(['employee', 'staff', 'branch'])
+            ->join('employees', 'advances.employeeID' , 'employees.employeeID')
+            ->where('employees.employeeType', data_get($request, 'employeeType'))
+            ->whereYear('date', Carbon::now()->year)
+            ->whereMonth('date', Carbon::now()->month)
+            ->orderBy('date', 'asc')
+            ->get();
+    }
+
+    /**
      * @param StoreAdvanceRequest $request
      * @return mixed
      */
@@ -52,6 +80,24 @@ class AdvanceRepository implements AdvanceRepositoryInterface
             'handlerStaffID' => data_get($request, 'handlerStaffID'),
             'branchID' => data_get($request, 'branchID'),
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $advanceID
+     * @return mixed
+     */
+    public function trashedRestore(Request $request, $advanceID)
+    {
+        $advance = Advance::withTrashed()->findOrFail($advanceID);
+
+        if ($advance->trashed()) {
+            $advance->update([
+                'handlerStaffID' => data_get($request, 'handlerStaffID'),
+            ]);
+        }
+
+        return $advance->trashed() ? $advance->restore() : false;
     }
 
     /**
@@ -88,18 +134,34 @@ class AdvanceRepository implements AdvanceRepositoryInterface
     }
 
     /**
+     * @param Request $request
      * @param Advance $advance
      * @return mixed
      * @throws Exception
      */
-    public function forceDeleteAdvance(Advance $advance)
+    public function softDeleteAdvance(Request $request, Advance $advance)
     {
+        $advance->update([
+            'handlerStaffID' => data_get($request, 'handlerStaffID'),
+        ]);
+
         $deleted = $advance->delete();
 
         if (!$deleted){
-            throw new Exception('Failed to delete Advance: ' . $advance->advanceID);
+            throw new Exception('Failed to soft delete advance: ' . $advance->advanceID);
         }
 
         return $deleted;
+    }
+
+    /**
+     * @param $advanceID
+     * @return mixed
+     */
+    public function forceDeleteAdvance($advanceID)
+    {
+        $advance = Advance::withTrashed()->findOrFail($advanceID);
+
+        return $advance->trashed() ? $advance->forceDelete() : false;
     }
 }
