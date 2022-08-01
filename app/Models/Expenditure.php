@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Expenditure extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     /**
      * The table associated with the model.
@@ -52,7 +54,8 @@ class Expenditure extends Model
      */
     protected $casts = [
         'expenseAmount' => 'decimal:2',
-        'date' => 'timestamp:Y-m-d'
+        'date' => 'timestamp:Y-m-d',
+        'deleted_at' => 'timestamp:Y-m-d h:i A'
     ];
 
     /**

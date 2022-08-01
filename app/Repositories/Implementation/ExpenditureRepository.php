@@ -35,6 +35,30 @@ class ExpenditureRepository implements ExpenditureRepositoryInterface
     }
 
     /**
+     * @param Request $request
+     * @return mixed
+     * @throws Exception
+     */
+    public function getAllTrashedExpenditures(Request $request)
+    {
+        if ($request->date != null) {
+            return Expenditure::onlyTrashed()
+                ->with(['staff', 'branch'])
+                ->whereYear('date', data_get($request, 'date'))
+                ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
+                ->orderBy('date', 'asc')
+                ->get();
+        }
+
+        return Expenditure::onlyTrashed()
+            ->with(['staff', 'branch'])
+            ->whereYear('date', Carbon::now()->year)
+            ->whereMonth('date', Carbon::now()->month)
+            ->orderBy('date', 'asc')
+            ->get();
+    }
+
+    /**
      * @param StoreExpenditureRequest $request
      * @return mixed
      */
@@ -47,6 +71,24 @@ class ExpenditureRepository implements ExpenditureRepositoryInterface
             'handlerStaffID' => data_get($request, 'handlerStaffID'),
             'branchID' => data_get($request, 'branchID'),
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $expenditureID
+     * @return mixed
+     */
+    public function trashedRestore(Request $request, $expenditureID)
+    {
+        $expenditure = Expenditure::withTrashed()->findOrFail($expenditureID);
+
+        if ($expenditure->trashed()) {
+            $expenditure->update([
+                'handlerStaffID' => data_get($request, 'handlerStaffID'),
+            ]);
+        }
+
+        return $expenditure->trashed() ? $expenditure->restore() : false;
     }
 
     /**
@@ -82,12 +124,17 @@ class ExpenditureRepository implements ExpenditureRepositoryInterface
     }
 
     /**
+     * @param Request $request
      * @param Expenditure $expenditure
      * @return mixed
      * @throws Exception
      */
-    public function forceDeleteExpenditure(Expenditure $expenditure)
+    public function softDeleteExpenditure(Request $request, Expenditure $expenditure)
     {
+        $expenditure->update([
+            'handlerStaffID' => data_get($request, 'handlerStaffID'),
+        ]);
+
         $deleted = $expenditure->delete();
 
         if (!$deleted){
@@ -95,5 +142,17 @@ class ExpenditureRepository implements ExpenditureRepositoryInterface
         }
 
         return $deleted;
+    }
+
+    /**
+     * @param $expenditureID
+     * @return mixed
+     * @throws Exception
+     */
+    public function forceDeleteExpenditure($expenditureID)
+    {
+        $expenditure = Expenditure::withTrashed()->findOrFail($expenditureID);
+
+        return $expenditure->trashed() ? $expenditure->forceDelete() : false;
     }
 }

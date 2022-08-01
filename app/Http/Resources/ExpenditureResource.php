@@ -27,6 +27,7 @@ class ExpenditureResource extends JsonResource
             'expense' => $this->expense,
             'expenseAmount' => $this->expenseAmount,
             'date' => $this->date,
+            'deleted_at' => $this->whenNotNull($this->deleted_at),
             'handledBy' => [
                 'staffID' => $this->staff->staffID,
                 'staffName' => $this->staff->employee->title .

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAdvanceRequest;
 use App\Http\Resources\ExpenditureCollection;
 use App\Http\Resources\ExpenditureResource;
 use App\Models\Expenditure;
@@ -10,6 +11,7 @@ use App\Http\Requests\UpdateExpenditureRequest;
 use App\Repositories\Interfaces\ExpenditureRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ExpenditureController extends Controller
 {
@@ -44,6 +46,23 @@ class ExpenditureController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return ExpenditureCollection
+     */
+    public function indexTrashed(Request $request)
+    {
+        $request->validate([
+            'date' => ['nullable', 'date']
+        ]);
+
+        $expenditures = $this->expenditureRepository->getAllTrashedExpenditures($request);
+
+        return new ExpenditureCollection($expenditures);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param StoreExpenditureRequest $request
@@ -54,6 +73,27 @@ class ExpenditureController extends Controller
         $created = $this->expenditureRepository->createExpenditure($request);
 
         return new ExpenditureResource($created);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @param $expenditureID
+     * @return JsonResponse
+     */
+    public function restore(Request $request, $expenditureID)
+    {
+        $request->validate([
+            'handlerStaffID' => ['required', Rule::exists('staff', 'staffID'), 'string', 'size:8']
+        ]);
+
+        $restored = $this->expenditureRepository->trashedRestore($request, $expenditureID);
+
+        return new JsonResponse([
+            'success' => $restored,
+            'status' => $restored ? 'restored' : 'Failed'
+        ]);
     }
 
     /**
@@ -86,17 +126,38 @@ class ExpenditureController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param Request $request
      * @param Expenditure $expenditure
      * @return JsonResponse
      */
-    public function destroy(Expenditure $expenditure)
+    public function destroy(Request $request, Expenditure $expenditure)
     {
-        $deleted = $this->expenditureRepository->forceDeleteExpenditure($expenditure);
+        $request->validate([
+            'handlerStaffID' => ['required', Rule::exists('staff', 'staffID'), 'string', 'size:8']
+        ]);
+
+        $deleted = $this->expenditureRepository->softDeleteExpenditure($request, $expenditure);
 
         return new JsonResponse([
             'success' => $deleted,
             'status' => 'deleted',
             'data' => new ExpenditureResource($expenditure),
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $expenditureID
+     * @return JsonResponse
+     */
+    public function destroyTrashed($expenditureID)
+    {
+        $deleted = $this->expenditureRepository->forceDeleteExpenditure($expenditureID);
+
+        return new JsonResponse([
+            'success' => $deleted,
+            'status' => $deleted ? 'permanently_deleted' : 'Failed'
         ]);
     }
 }

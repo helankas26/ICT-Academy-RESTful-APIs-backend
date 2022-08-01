@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('date');
             $table->char('handlerStaffID', 11);
             $table->char('branchID', 8);
+            $table->softDeletes();
             $table->foreign('handlerStaffID')->references('staffID')->on('staff');
             $table->foreign('branchID')->references('branchID')->on('branches');
             //$table->primary('expenseID');
