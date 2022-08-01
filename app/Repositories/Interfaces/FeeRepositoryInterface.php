@@ -27,7 +27,7 @@ interface FeeRepositoryInterface
      * @param Request $request
      * @return mixed
      */
-    public function getTodayFeesCollectionsummary(Request $request);
+    public function getTodayFeesCollectionSummary(Request $request);
 
     /**
      * @param StoreFeeRequest $request

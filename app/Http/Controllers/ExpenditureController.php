@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreAdvanceRequest;
 use App\Http\Resources\ExpenditureCollection;
 use App\Http\Resources\ExpenditureResource;
 use App\Models\Expenditure;

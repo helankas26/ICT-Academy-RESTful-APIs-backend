@@ -72,7 +72,7 @@ class FeeController extends Controller
             'date' => ['nullable', 'date']
         ]);
 
-        $fees = $this->feeRepository->getTodayFeesCollectionsummary($request);
+        $fees = $this->feeRepository->getTodayFeesCollectionSummary($request);
 
         $arrears = 0;
         $collection = 0;

@@ -79,7 +79,8 @@ class AdvanceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreAdvanceRequest $request
+     * @param Request $request
+     * @param $advanceID
      * @return JsonResponse
      */
     public function restore(Request $request, $advanceID)

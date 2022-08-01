@@ -58,7 +58,7 @@ class FeeRepository implements FeeRepositoryInterface
      * @param Request $request
      * @return mixed
      */
-    public function getTodayFeesCollectionsummary(Request $request)
+    public function getTodayFeesCollectionSummary(Request $request)
     {
         if ($request->date != null) {
             return Fee::query()

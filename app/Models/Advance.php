@@ -54,7 +54,8 @@ class Advance extends Model
      */
     protected $casts = [
         'advanceAmount' => 'decimal:2',
-        'date' => 'timestamp:Y-m-d'
+        'date' => 'timestamp:Y-m-d',
+        'deleted_at' => 'timestamp:Y-m-d h:i A'
     ];
 
     /**
