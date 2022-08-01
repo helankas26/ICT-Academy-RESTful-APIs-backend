@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             EmployeeSeeder::class,
             StaffSeeder::class,
             UserSeeder::class,
+            ProcessSeeder::class,
         ]);
 
         // \App\Models\User::factory(10)->create();

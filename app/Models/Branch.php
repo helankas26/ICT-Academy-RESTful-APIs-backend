@@ -107,4 +107,12 @@ class Branch extends Model
     {
         return $this->hasMany(Fee::class, 'branchID', 'branchID');
     }
+
+    /**
+     * Get the process for the branch.
+     */
+    public function processes(): HasMany
+    {
+        return $this->hasMany(Process::class, 'branchID', 'branchID');
+    }
 }

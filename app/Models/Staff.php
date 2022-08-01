@@ -93,4 +93,12 @@ class Staff extends Model
     {
         return $this->morphOne(Employee::class, 'employable', 'employeeType', 'employeeID');
     }
+
+    /**
+     * Get the processes handled by staff.
+     */
+    public function processes(): HasMany
+    {
+        return $this->hasMany(Process::class, 'handlerStaffID', 'staffID');
+    }
 }
