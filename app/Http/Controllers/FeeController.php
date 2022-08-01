@@ -12,6 +12,7 @@ use App\Models\Student;
 use App\Repositories\Interfaces\FeeRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class FeeController extends Controller
 {
@@ -128,12 +129,17 @@ class FeeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param Request $request
      * @param $feeID
      * @return JsonResponse
      */
-    public function restore($feeID)
+    public function restore(Request $request, $feeID)
     {
-        $restored = $this->feeRepository->trashedRestore($feeID);
+        $request->validate([
+            'handlerStaffID' => ['required', Rule::exists('staff', 'staffID'), 'string', 'size:8']
+        ]);
+
+        $restored = $this->feeRepository->trashedRestore($request, $feeID);
 
         return new JsonResponse([
             'success' => $restored,
@@ -171,12 +177,17 @@ class FeeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param Request $request
      * @param Fee $fee
      * @return JsonResponse
      */
-    public function destroy(Fee $fee)
+    public function destroy(Request $request, Fee $fee)
     {
-        $deleted = $this->feeRepository->softDeleteFee($fee);
+        $request->validate([
+            'handlerStaffID' => ['required', Rule::exists('staff', 'staffID'), 'string', 'size:8']
+        ]);
+
+        $deleted = $this->feeRepository->softDeleteFee($request, $fee);
 
         return new JsonResponse([
             'success' => $deleted,

@@ -139,12 +139,19 @@ class FeeRepository implements FeeRepositoryInterface
     }
 
     /**
+     * @param Request $request
      * @param $feeID
      * @return mixed
      */
-    public function trashedRestore($feeID)
+    public function trashedRestore(Request $request, $feeID)
     {
         $fee = Fee::withTrashed()->findOrFail($feeID);
+
+        if ($fee->trashed()) {
+            $fee->update([
+                'handlerStaffID' => data_get($request, 'handlerStaffID'),
+            ]);
+        }
 
         return $fee->trashed() ? $fee->restore() : false;
     }
@@ -186,12 +193,17 @@ class FeeRepository implements FeeRepositoryInterface
     }
 
     /**
+     * @param Request $request
      * @param Fee $fee
      * @return mixed
      * @throws Exception
      */
-    public function softDeleteFee(Fee $fee)
+    public function softDeleteFee(Request $request, Fee $fee)
     {
+        $fee->update([
+            'handlerStaffID' => data_get($request, 'handlerStaffID'),
+        ]);
+
         $deleted = $fee->delete();
 
         if (!$deleted){

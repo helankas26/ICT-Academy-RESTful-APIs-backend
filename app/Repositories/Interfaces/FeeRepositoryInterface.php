@@ -45,10 +45,11 @@ interface FeeRepositoryInterface
     public function payForManyClasses(StoreFeeRequest $request, Student $student);
 
     /**
+     * @param Request $request
      * @param $feeID
      * @return mixed
      */
-    public function trashedRestore($feeID);
+    public function trashedRestore(Request $request, $feeID);
 
     /**
      * @param Fee $fee
@@ -64,10 +65,11 @@ interface FeeRepositoryInterface
     public function updateFee(UpdateFeeRequest $request, Fee $fee);
 
     /**
+     * @param Request $request
      * @param Fee $fee
      * @return mixed
      */
-    public function softDeleteFee(Fee $fee);
+    public function softDeleteFee(Request $request, Fee $fee);
 
     /**
      * @param $feeID
