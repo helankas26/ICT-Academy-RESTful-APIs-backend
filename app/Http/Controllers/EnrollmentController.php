@@ -366,30 +366,6 @@ class EnrollmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @return EnrollmentClassCollection
-     */
-    public function updateMonthly()
-    {
-        $updated = $this->enrollmentRepository->updateMonthlyClassesPaymentStatus();
-
-        return new EnrollmentClassCollection($updated);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @return EnrollmentClassCollection
-     */
-    public function updateMonthlyDecrement()
-    {
-        $updated = $this->enrollmentRepository->updateMonthlyClassesPaymentStatusDecrement();
-
-        return new EnrollmentClassCollection($updated);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
      * @param UpdateEnrollmentRequest $request
      * @param Classes $class
      * @return EnrollmentClassResource

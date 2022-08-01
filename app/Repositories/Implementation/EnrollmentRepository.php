@@ -307,54 +307,6 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
     }
 
     /**
-     * @return mixed
-     * @throws Throwable
-     */
-    public function updateMonthlyClassesPaymentStatus()
-    {
-        $classes = Classes::query()->whereHas('students')
-            ->where('feeType', 'Monthly')
-            ->where('status', 'Active')
-            ->get();
-
-        return DB::transaction(function () use ($classes) {
-
-            foreach ($classes as $class) {
-                $class->students()
-                    ->where('enrollment.status', '1')
-                    ->whereNot('enrollment.paymentStatus', '-1')
-                    ->increment('paymentStatus');
-            }
-
-            return $classes;
-        });
-    }
-
-    /**
-     * @return mixed
-     * @throws Throwable
-     */
-    public function updateMonthlyClassesPaymentStatusDecrement()
-    {
-        $classes = Classes::query()->whereHas('students')
-            ->where('feeType', 'Monthly')
-            ->where('status', 'Active')
-            ->get();
-
-        return DB::transaction(function () use ($classes) {
-
-            foreach ($classes as $class) {
-                $class->students()
-                    ->where('enrollment.status', '1')
-                    ->whereNotIn('enrollment.paymentStatus', ['-1', '0'])
-                    ->decrement('paymentStatus');
-            }
-
-            return $classes;
-        });
-    }
-
-    /**
      * @param UpdateEnrollmentRequest $request
      * @param Classes $class
      * @return mixed

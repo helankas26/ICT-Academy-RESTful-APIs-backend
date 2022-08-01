@@ -28,8 +28,6 @@ Route::middleware([
         Route::post('/classes', [EnrollmentController::class, 'storeByClass'])->name('store.class');
         Route::patch('/classes/{class:classID}/students/{student:studentID}/daily', [EnrollmentController::class, 'updateDaily'])->name('update.daily');
         Route::patch('/classes/{class:classID}/students/{student:studentID}/dailyDecrement', [EnrollmentController::class, 'updateDailyDecrement'])->name('update.daily.decrement');
-        Route::patch('/classes/monthly', [EnrollmentController::class, 'updateMonthly'])->name('update.monthly');
-        Route::patch('/classes/monthlyDecrement', [EnrollmentController::class, 'updateMonthlyDecrement'])->name('update.monthly.decrement');
         Route::patch('/classes/{class:classID}/students', [EnrollmentController::class, 'updateClassStatusForAll'])->name('update.class.statusForAll');
         Route::delete('/classes/{class:classID}', [EnrollmentController::class, 'destroyByClass'])->name('destroy.class');
     });
