@@ -55,6 +55,10 @@ class AdvanceResource extends JsonResource
                 'staffID' => $this->employee->employeeID,
                 'staffName' => $this->employee->title .
                     ' ' . $this->employee->person->firstName . ' ' . $this->employee->person->lastName,
+                'branch' => [
+                    'branchID' => $this->employee->employable->branch->branchID,
+                    'branchName' => $this->employee->employable->branch->branchName,
+                ],
             ],
             'handledBy' => [
                 'staffID' => $this->staff->staffID,
