@@ -51,6 +51,7 @@ class AdvanceResource extends JsonResource
             'description' => $this->description,
             'advanceAmount' => $this->advanceAmount,
             'date' => $this->date,
+            'deleted_at' => $this->whenNotNull($this->deleted_at),
             'staff' =>  [
                 'staffID' => $this->employee->employeeID,
                 'staffName' => $this->employee->title .
