@@ -26,12 +26,14 @@ class FeeRepository implements FeeRepositoryInterface
             return Fee::query()
                 ->with(['student.person', 'class', 'staff.employee.person', 'branch'])
                 ->whereYear('date', data_get($request, 'date'))
+                ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
                 ->get();
         }
 
         return Fee::query()
             ->with(['student.person', 'class', 'staff.employee.person', 'branch'])
             ->whereYear('date', Carbon::now()->year)
+            ->whereMonth('date', Carbon::now()->month)
             ->get();
     }
 
@@ -45,12 +47,14 @@ class FeeRepository implements FeeRepositoryInterface
             return Fee::onlyTrashed()
                 ->with(['student.person', 'class', 'staff.employee.person', 'branch'])
                 ->whereYear('date', data_get($request, 'date'))
+                ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
                 ->get();
         }
 
         return Fee::onlyTrashed()
             ->with(['student.person', 'class', 'staff.employee.person', 'branch'])
             ->whereYear('date', Carbon::now()->year)
+            ->whereMonth('date', Carbon::now()->month)
             ->get();
     }
 

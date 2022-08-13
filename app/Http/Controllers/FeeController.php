@@ -37,7 +37,7 @@ class FeeController extends Controller
     public function index(Request $request)
     {
         $request->validate([
-            'date' => ['nullable', 'date_format:Y']
+            'date' => ['nullable', 'date']
         ]);
 
         $fees = $this->feeRepository->getAllFees($request);
@@ -53,7 +53,7 @@ class FeeController extends Controller
     public function indexTrashed(Request $request)
     {
         $request->validate([
-            'date' => ['nullable', 'date_format:Y']
+            'date' => ['nullable', 'date']
         ]);
 
         $fees = $this->feeRepository->getAllTrashedFees($request);
