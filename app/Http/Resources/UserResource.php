@@ -57,6 +57,10 @@ class UserResource extends JsonResource
                     'name' => $this->employee->title . ' ' . $this->employee->person->firstName . ' ' . $this->employee->person->lastName,
                     'employeeType' => $this->employee->employeeType,
                     'email' => $this->employee->person->email,
+                    'branch' => [
+                        'branchID' => null,
+                        'branchName' => null,
+                    ],
                 ],
             ];
         }
