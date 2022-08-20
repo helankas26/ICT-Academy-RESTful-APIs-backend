@@ -16,6 +16,7 @@ use App\Repositories\Implementation\MarkRepository;
 use App\Repositories\Implementation\ParentsRepository;
 use App\Repositories\Implementation\PersonRepository;
 use App\Repositories\Implementation\ProcessRepository;
+use App\Repositories\Implementation\Reporting\AdvanceReportRepository;
 use App\Repositories\Implementation\StaffRepository;
 use App\Repositories\Implementation\StudentRepository;
 use App\Repositories\Implementation\SubjectRepository;
@@ -35,6 +36,7 @@ use App\Repositories\Interfaces\MarkRepositoryInterface;
 use App\Repositories\Interfaces\ParentsRepositoryInterface;
 use App\Repositories\Interfaces\PersonRepositoryInterface;
 use App\Repositories\Interfaces\ProcessRepositoryInterface;
+use App\Repositories\Interfaces\Reporting\AdvanceReportRepositoryInterface;
 use App\Repositories\Interfaces\StaffRepositoryInterface;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
 use App\Repositories\Interfaces\SubjectRepositoryInterface;
@@ -70,6 +72,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(SubjectRepositoryInterface::class, SubjectRepository::class);
         $this->app->bind(TeacherRepositoryInterface::class, TeacherRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+
+        //Reporting
+        $this->app->bind(AdvanceReportRepositoryInterface::class, AdvanceReportRepository::class);
     }
 
     /**
