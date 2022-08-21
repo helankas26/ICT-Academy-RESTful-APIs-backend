@@ -3,23 +3,23 @@
 namespace App\Http\Controllers\Reporting;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Reporting\EnrollmentClassReportResource;
+use App\Http\Resources\Reporting\RegisterClassReportResource;
 use App\Models\Classes;
-use App\Repositories\Interfaces\Reporting\EnrollmentReportRepositoryInterface;
+use App\Repositories\Interfaces\Reporting\RegisterReportRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 
-class EnrollmentReportController extends Controller
+class RegisterReportController extends Controller
 {
     /**
-     * @var EnrollmentReportRepositoryInterface
+     * @var RegisterReportRepositoryInterface
      */
-    private EnrollmentReportRepositoryInterface $enrollmentReportRepository;
+    private RegisterReportRepositoryInterface $enrollmentReportRepository;
 
     /**
-     * @param EnrollmentReportRepositoryInterface $enrollmentReportRepository
+     * @param RegisterReportRepositoryInterface $enrollmentReportRepository
      */
-    public function __construct(EnrollmentReportRepositoryInterface $enrollmentReportRepository)
+    public function __construct(RegisterReportRepositoryInterface $enrollmentReportRepository)
     {
         $this->enrollmentReportRepository = $enrollmentReportRepository;
     }
@@ -35,7 +35,7 @@ class EnrollmentReportController extends Controller
 
         return new JsonResponse([
             'success' => true,
-            'class' => new EnrollmentClassReportResource($class),
+            'class' => new RegisterClassReportResource($class),
             'meta' => [
                 'active_count' => $class->active_count,
                 'deactivate_count' => $class->deactivate_count,

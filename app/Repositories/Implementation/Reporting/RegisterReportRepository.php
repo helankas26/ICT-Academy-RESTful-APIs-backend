@@ -3,10 +3,10 @@
 namespace App\Repositories\Implementation\Reporting;
 
 use App\Models\Classes;
-use App\Repositories\Interfaces\Reporting\EnrollmentReportRepositoryInterface;
+use App\Repositories\Interfaces\Reporting\RegisterReportRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 
-class EnrollmentReportRepository implements EnrollmentReportRepositoryInterface
+class RegisterReportRepository implements RegisterReportRepositoryInterface
 {
     /**
      * @param Classes $class

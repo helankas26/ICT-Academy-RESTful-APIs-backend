@@ -5,14 +5,14 @@ namespace App\Http\Resources\Reporting;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EnrolledStudentsReportResource extends JsonResource
+class RegisteredStudentsReportResource extends JsonResource
 {
     /**
      * The "data" wrapper that should be applied.
      *
      * @var string
      */
-    public static $wrap = 'enrollment';
+    public static $wrap = 'registry';
 
     /**
      * Transform the resource into an array.

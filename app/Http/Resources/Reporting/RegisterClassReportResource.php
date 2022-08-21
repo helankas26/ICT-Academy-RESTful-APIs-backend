@@ -6,14 +6,14 @@ use App\Http\Resources\SubjectResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EnrollmentClassReportResource extends JsonResource
+class RegisterClassReportResource extends JsonResource
 {
     /**
      * The "data" wrapper that should be applied.
      *
      * @var string
      */
-    public static $wrap = 'enrollment';
+    public static $wrap = 'registry';
 
     /**
      * Transform the resource into an array.
@@ -45,7 +45,7 @@ class EnrollmentClassReportResource extends JsonResource
                 'branchID' => $this->branch->branchID,
                 'branchName' => $this->branch->branchName,
             ],
-            'students' => EnrolledStudentsReportResource::collection($this->students),
+            'students' => RegisteredStudentsReportResource::collection($this->students),
         ];
     }
 
