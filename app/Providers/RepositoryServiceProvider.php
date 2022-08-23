@@ -21,6 +21,7 @@ use App\Repositories\Implementation\Reporting\AttendanceReportRepository;
 use App\Repositories\Implementation\Reporting\RegisterReportRepository;
 use App\Repositories\Implementation\Reporting\ExamMarksReportRepository;
 use App\Repositories\Implementation\Reporting\ExpenseReportRepository;
+use App\Repositories\Implementation\Reporting\TimetableReportRepository;
 use App\Repositories\Implementation\StaffRepository;
 use App\Repositories\Implementation\StudentRepository;
 use App\Repositories\Implementation\SubjectRepository;
@@ -45,6 +46,7 @@ use App\Repositories\Interfaces\Reporting\AttendanceReportRepositoryInterface;
 use App\Repositories\Interfaces\Reporting\RegisterReportRepositoryInterface;
 use App\Repositories\Interfaces\Reporting\ExamMarksReportRepositoryInterface;
 use App\Repositories\Interfaces\Reporting\ExpenseReportRepositoryInterface;
+use App\Repositories\Interfaces\Reporting\TimetableReportRepositoryInterface;
 use App\Repositories\Interfaces\StaffRepositoryInterface;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
 use App\Repositories\Interfaces\SubjectRepositoryInterface;
@@ -87,6 +89,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ExamMarksReportRepositoryInterface::class, ExamMarksReportRepository::class);
         $this->app->bind(ExpenseReportRepositoryInterface::class, ExpenseReportRepository::class);
         $this->app->bind(RegisterReportRepositoryInterface::class, RegisterReportRepository::class);
+        $this->app->bind(TimetableReportRepositoryInterface::class, TimetableReportRepository::class);
     }
 
     /**
