@@ -25,6 +25,7 @@ class AdvanceRepository implements AdvanceRepositoryInterface
                 ->where('employees.employeeType', data_get($request, 'employeeType'))
                 ->whereYear('date', data_get($request, 'date'))
                 ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
+                ->where('branchID', \request()->header('branchID'))
                 ->orderBy('date', 'asc')
                 ->get();
         }
@@ -34,6 +35,7 @@ class AdvanceRepository implements AdvanceRepositoryInterface
             ->where('employees.employeeType', data_get($request, 'employeeType'))
             ->whereYear('date', Carbon::now()->year)
             ->whereMonth('date', Carbon::now()->month)
+            ->where('branchID', \request()->header('branchID'))
             ->orderBy('date', 'asc')
             ->get();
     }
@@ -52,6 +54,7 @@ class AdvanceRepository implements AdvanceRepositoryInterface
                 ->where('employees.employeeType', data_get($request, 'employeeType'))
                 ->whereYear('date', data_get($request, 'date'))
                 ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
+                ->where('branchID', \request()->header('branchID'))
                 ->orderBy('date', 'asc')
                 ->get();
         }
@@ -62,6 +65,7 @@ class AdvanceRepository implements AdvanceRepositoryInterface
             ->where('employees.employeeType', data_get($request, 'employeeType'))
             ->whereYear('date', Carbon::now()->year)
             ->whereMonth('date', Carbon::now()->month)
+            ->where('branchID', \request()->header('branchID'))
             ->orderBy('date', 'asc')
             ->get();
     }

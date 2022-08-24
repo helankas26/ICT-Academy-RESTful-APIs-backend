@@ -35,12 +35,14 @@ class ExamRepository implements ExamRepositoryInterface
         if ($request->date != null) {
             return Exam::query()->with(['class', 'subject', 'category', 'branch'])
                 ->whereYear('date', data_get($request, 'date'))
+                ->where('branchID', \request()->header('branchID'))
                 ->orderBy('date', 'asc')
                 ->get();
         }
 
         return Exam::query()->with(['class', 'subject', 'category', 'branch'])
             ->whereYear('date', Carbon::now()->year)
+            ->where('branchID', \request()->header('branchID'))
             ->orderBy('date', 'asc')
             ->get();
     }
@@ -55,6 +57,7 @@ class ExamRepository implements ExamRepositoryInterface
             return Exam::query()->with(['class', 'subject', 'category', 'branch'])
                 ->whereYear('date', data_get($request, 'date'))
                 ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
+                ->where('branchID', \request()->header('branchID'))
                 ->orderBy('date', 'asc')
                 ->get();
         }
@@ -62,6 +65,7 @@ class ExamRepository implements ExamRepositoryInterface
         return Exam::query()->with(['class', 'subject', 'category', 'branch'])
             ->whereYear('date', Carbon::now()->year)
             ->whereMonth('date', Carbon::now()->month)
+            ->where('branchID', \request()->header('branchID'))
             ->orderBy('date', 'asc')
             ->get();
     }

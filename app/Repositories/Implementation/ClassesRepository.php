@@ -38,6 +38,7 @@ class ClassesRepository implements ClassesRepositoryInterface
                 ->where('status', data_get($request, 'status'))
                 ->where('feeType', data_get($request, 'feeType'))
                 ->where('day', data_get($request, 'day'))
+                ->where('branchID', \request()->header('branchID'))
                 ->get();
         }
 
@@ -46,6 +47,7 @@ class ClassesRepository implements ClassesRepositoryInterface
                 ->withCount('students')
                 ->where('status', data_get($request, 'status'))
                 ->where('feeType', data_get($request, 'feeType'))
+                ->where('branchID', \request()->header('branchID'))
                 ->get();
         }
 
@@ -54,12 +56,14 @@ class ClassesRepository implements ClassesRepositoryInterface
                 ->withCount('students')
                 ->where('status', data_get($request, 'status'))
                 ->where('day', data_get($request, 'day'))
+                ->where('branchID', \request()->header('branchID'))
                 ->get();
         }
 
         return Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
             ->withCount('students')
             ->where('status', data_get($request, 'status'))
+            ->where('branchID', \request()->header('branchID'))
             ->get();
     }
 

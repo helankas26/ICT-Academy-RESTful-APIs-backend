@@ -23,6 +23,7 @@ class ExpenditureRepository implements ExpenditureRepositoryInterface
             return Expenditure::query()->with(['staff', 'branch'])
                 ->whereYear('date', data_get($request, 'date'))
                 ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
+                ->where('branchID', \request()->header('branchID'))
                 ->orderBy('date', 'asc')
                 ->get();
         }
@@ -30,6 +31,7 @@ class ExpenditureRepository implements ExpenditureRepositoryInterface
         return Expenditure::query()->with(['staff', 'branch'])
             ->whereYear('date', Carbon::now()->year)
             ->whereMonth('date', Carbon::now()->month)
+            ->where('branchID', \request()->header('branchID'))
             ->orderBy('date', 'asc')
             ->get();
     }
@@ -46,6 +48,7 @@ class ExpenditureRepository implements ExpenditureRepositoryInterface
                 ->with(['staff', 'branch'])
                 ->whereYear('date', data_get($request, 'date'))
                 ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
+                ->where('branchID', \request()->header('branchID'))
                 ->orderBy('date', 'asc')
                 ->get();
         }
@@ -54,6 +57,7 @@ class ExpenditureRepository implements ExpenditureRepositoryInterface
             ->with(['staff', 'branch'])
             ->whereYear('date', Carbon::now()->year)
             ->whereMonth('date', Carbon::now()->month)
+            ->where('branchID', \request()->header('branchID'))
             ->orderBy('date', 'asc')
             ->get();
     }

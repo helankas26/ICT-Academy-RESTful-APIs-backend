@@ -31,7 +31,8 @@ class MarkRepository implements MarkRepositoryInterface
                 }, 'person'])
                 ->whereHas('exams', function (Builder $query) use ($request) {
                     $query->whereYear('date', data_get($request, 'date'));
-                })->get();
+                })->where('branchID', \request()->header('branchID'))
+                ->get();
         }
 
         return Student::query()
@@ -40,7 +41,8 @@ class MarkRepository implements MarkRepositoryInterface
             }, 'person'])
             ->whereHas('exams', function (Builder $query) {
                 $query->whereYear('date', Carbon::now()->year);
-            })->get();
+            })->where('branchID', \request()->header('branchID'))
+            ->get();
     }
 
     /**
@@ -145,12 +147,14 @@ class MarkRepository implements MarkRepositoryInterface
             return Exam::query()->has('students')
                 ->with(['students', 'students.person'])
                 ->whereYear('date', data_get($request, 'date'))
+                ->where('branchID', \request()->header('branchID'))
                 ->get();
         }
 
         return Exam::query()->has('students')
             ->with(['students', 'students.person'])
             ->whereYear('date', Carbon::now()->year)
+            ->where('branchID', \request()->header('branchID'))
             ->get();
     }
 

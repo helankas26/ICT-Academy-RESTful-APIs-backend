@@ -40,7 +40,8 @@ class AttendanceRepository implements AttendanceRepositoryInterface
             ])
             ->whereHas('attendances', function (Builder $query) use ($request) {
                 $query->where('date', data_get($request, 'date'));
-            })->get();
+            })->where('branchID', \request()->header('branchID'))
+            ->get();
     }
 
     /**

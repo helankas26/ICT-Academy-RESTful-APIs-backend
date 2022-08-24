@@ -27,6 +27,7 @@ class FeeRepository implements FeeRepositoryInterface
                 ->with(['student.person', 'class', 'staff.employee.person', 'branch'])
                 ->whereYear('date', data_get($request, 'date'))
                 ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
+                ->where('branchID', \request()->header('branchID'))
                 ->get();
         }
 
@@ -34,6 +35,7 @@ class FeeRepository implements FeeRepositoryInterface
             ->with(['student.person', 'class', 'staff.employee.person', 'branch'])
             ->whereYear('date', Carbon::now()->year)
             ->whereMonth('date', Carbon::now()->month)
+            ->where('branchID', \request()->header('branchID'))
             ->get();
     }
 
@@ -48,6 +50,7 @@ class FeeRepository implements FeeRepositoryInterface
                 ->with(['student.person', 'class', 'staff.employee.person', 'branch'])
                 ->whereYear('date', data_get($request, 'date'))
                 ->whereMonth('date', Carbon::make(data_get($request, 'date'))->format('m'))
+                ->where('branchID', \request()->header('branchID'))
                 ->get();
         }
 
@@ -55,6 +58,7 @@ class FeeRepository implements FeeRepositoryInterface
             ->with(['student.person', 'class', 'staff.employee.person', 'branch'])
             ->whereYear('date', Carbon::now()->year)
             ->whereMonth('date', Carbon::now()->month)
+            ->where('branchID', \request()->header('branchID'))
             ->get();
     }
 
@@ -67,11 +71,13 @@ class FeeRepository implements FeeRepositoryInterface
         if ($request->date != null) {
             return Fee::query()
                 ->where('date', data_get($request, 'date'))
+                ->where('branchID', \request()->header('branchID'))
                 ->get();
         }
 
         return Fee::query()
             ->where('date', Carbon::now()->format('Y-m-d'))
+            ->where('branchID', \request()->header('branchID'))
             ->get();
     }
 

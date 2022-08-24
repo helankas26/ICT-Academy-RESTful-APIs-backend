@@ -64,7 +64,10 @@ class SubjectRepository implements SubjectRepositoryInterface
      */
     public function getClassesBySubjectId(Subject $subject)
     {
-        return Subject::query()->with('classes')->find($subject);
+        return Subject::query()
+            ->with(['classes' => function ($query) {
+                $query->where('branchID', \request()->header('branchID'));
+            }])->find($subject);
     }
 
     /**

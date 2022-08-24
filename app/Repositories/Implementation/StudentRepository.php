@@ -37,6 +37,7 @@ class StudentRepository implements StudentRepositoryInterface
         return Student::query()->with(['person', 'parent'])
             ->join('people', 'students.studentID', 'people.personID')
             ->where('people.status', data_get($request, 'status'))
+            ->where('branchID', \request()->header('branchID'))
             ->get();
     }
 

@@ -30,12 +30,14 @@ class ProcessRepository implements ProcessRepositoryInterface
             return Process::withTrashed()
                 ->with(['staff.employee.person', 'branch'])
                 ->whereYear('updated_at', data_get($request, 'date'))
+                ->where('branchID', \request()->header('branchID'))
                 ->get();
         }
 
         return Process::withTrashed()
             ->with(['staff.employee.person', 'branch'])
             ->whereYear('updated_at', Carbon::now()->year)
+            ->where('branchID', \request()->header('branchID'))
             ->get();
     }
 
@@ -49,6 +51,7 @@ class ProcessRepository implements ProcessRepositoryInterface
         $classes = Classes::query()->whereHas('students')
             ->where('feeType', 'Monthly')
             ->where('status', 'Active')
+            ->where('branchID', \request()->header('branchID'))
             ->get();
 
         return DB::transaction(function () use ($request, $classes) {
@@ -82,16 +85,19 @@ class ProcessRepository implements ProcessRepositoryInterface
                 ->whereHas('person', function (Builder $query) {
                     $query->where('status', 'Past');
                 })->where('grade', '11')
+                ->where('branchID', \request()->header('branchID'))
                 ->increment('grade');
 
             Student::query()
                 ->whereHas('person', function (Builder $query) {
                     $query->where('status', 'Active');
                 })->whereNotIn('grade', ['11', '12', '13', 'Other'])
+                ->where('branchID', \request()->header('branchID'))
                 ->increment('grade');
 
             Classes::query()->where('status', 'Active')
                 ->whereNotIn('grade', ['11', '12', '13', 'Other'])
+                ->where('branchID', \request()->header('branchID'))
                 ->increment('grade');
 
             return Process::query()->create([
@@ -110,9 +116,13 @@ class ProcessRepository implements ProcessRepositoryInterface
      */
     public function ordinaryLevelEndProcess(StoreProcessRequest $request)
     {
-        $students = Student::query()->where('grade', '11')->pluck('studentID');
+        $students = Student::query()->where('grade', '11')
+            ->where('branchID', \request()->header('branchID'))
+            ->pluck('studentID');
 
-        $classes = Classes::query()->where('grade', '11')->pluck('classID');
+        $classes = Classes::query()->where('grade', '11')
+            ->where('branchID', \request()->header('branchID'))
+            ->pluck('classID');
 
         return DB::transaction(function () use ($request, $students, $classes) {
 
@@ -152,11 +162,13 @@ class ProcessRepository implements ProcessRepositoryInterface
             ->whereHas('person', function (Builder $query) {
                 $query->where('status', 'Active');
             })->where('grade', '13')
+            ->where('branchID', \request()->header('branchID'))
             ->pluck('studentID');
 
         $classes = Classes::query()
             ->where('status', 'Active')
             ->where('grade', '13')
+            ->where('branchID', \request()->header('branchID'))
             ->pluck('classID');
 
         return DB::transaction(function () use ($request, $students, $classes) {
@@ -181,10 +193,12 @@ class ProcessRepository implements ProcessRepositoryInterface
                 ->whereHas('person', function (Builder $query) {
                     $query->where('status', 'Active');
                 })->where('grade', '12')
+                ->where('branchID', \request()->header('branchID'))
                 ->increment('grade');
 
             Classes::query()->where('status', 'Active')
                 ->where('grade', '12')
+                ->where('branchID', \request()->header('branchID'))
                 ->increment('grade');
 
             return Process::query()->create([
@@ -229,6 +243,7 @@ class ProcessRepository implements ProcessRepositoryInterface
         $classes = Classes::query()->whereHas('students')
             ->where('feeType', 'Monthly')
             ->where('status', 'Active')
+            ->where('branchID', \request()->header('branchID'))
             ->get();
 
         return DB::transaction(function () use ($request, $process, $classes) {
@@ -262,16 +277,19 @@ class ProcessRepository implements ProcessRepositoryInterface
                 ->whereHas('person', function (Builder $query) {
                     $query->where('status', 'Past');
                 })->where('grade', '12')
+                ->where('branchID', \request()->header('branchID'))
                 ->decrement('grade');
 
             Student::query()
                 ->whereHas('person', function (Builder $query) {
                     $query->where('status', 'Active');
                 })->whereNotIn('grade', ['12', '13', 'Other'])
+                ->where('branchID', \request()->header('branchID'))
                 ->decrement('grade');
 
             Classes::query()->where('status', 'Active')
                 ->whereNotIn('grade', ['12', '13', 'Other'])
+                ->where('branchID', \request()->header('branchID'))
                 ->decrement('grade');
 
             $process->update([
@@ -294,11 +312,13 @@ class ProcessRepository implements ProcessRepositoryInterface
             ->whereHas('person', function (Builder $query) {
                 $query->where('status', 'Past');
             })->where('grade', '11')
+            ->where('branchID', \request()->header('branchID'))
             ->pluck('studentID');
 
         $classes = Classes::query()
             ->where('status', 'Deactivate')
             ->where('grade', '11')
+            ->where('branchID', \request()->header('branchID'))
             ->pluck('classID');
 
         return DB::transaction(function () use ($request, $process, $students, $classes) {
@@ -339,11 +359,13 @@ class ProcessRepository implements ProcessRepositoryInterface
             ->whereHas('person', function (Builder $query) {
                 $query->where('status', 'Past');
             })->where('grade', '13')
+            ->where('branchID', \request()->header('branchID'))
             ->pluck('studentID');
 
         $classes = Classes::query()
             ->where('status', 'Deactivate')
             ->where('grade', '13')
+            ->where('branchID', \request()->header('branchID'))
             ->pluck('classID');
 
         return DB::transaction(function () use ($request, $process, $students, $classes) {
@@ -352,10 +374,12 @@ class ProcessRepository implements ProcessRepositoryInterface
                 ->whereHas('person', function (Builder $query) {
                     $query->where('status', 'Active');
                 })->where('grade', '13')
+                ->where('branchID', \request()->header('branchID'))
                 ->decrement('grade');
 
             Classes::query()->where('status', 'Active')
                 ->where('grade', '13')
+                ->where('branchID', \request()->header('branchID'))
                 ->decrement('grade');
 
             Person::query()->whereIn('personID', $students)->update([
@@ -400,6 +424,7 @@ class ProcessRepository implements ProcessRepositoryInterface
             ->where('processType', 'month_end')
             ->whereYear('updated_at', Carbon::now()->year)
             ->whereMonth('updated_at', Carbon::now()->month)
+            ->where('branchID', \request()->header('branchID'))
             ->latest('updated_at')
             ->first();
     }
@@ -412,6 +437,7 @@ class ProcessRepository implements ProcessRepositoryInterface
         return Process::withoutTrashed()->with(['staff.employee.person', 'branch'])
             ->where('processType', 'year_end')
             ->whereYear('updated_at', Carbon::now()->year)
+            ->where('branchID', \request()->header('branchID'))
             ->latest('updated_at')
             ->first();
     }
@@ -424,6 +450,7 @@ class ProcessRepository implements ProcessRepositoryInterface
         return Process::withoutTrashed()->with(['staff.employee.person', 'branch'])
             ->where('processType', 'ol_batch_end')
             ->whereYear('updated_at', Carbon::now()->year)
+            ->where('branchID', \request()->header('branchID'))
             ->latest('updated_at')
             ->first();
     }
@@ -436,6 +463,7 @@ class ProcessRepository implements ProcessRepositoryInterface
         return Process::withoutTrashed()->with(['staff.employee.person', 'branch'])
             ->where('processType', 'al_batch_end')
             ->where('updated_at', '>', Carbon::now()->subYear()->addDay()->format('Y-m-d'))
+            ->where('branchID', \request()->header('branchID'))
             ->latest('updated_at')
             ->first();
     }
@@ -449,6 +477,7 @@ class ProcessRepository implements ProcessRepositoryInterface
             ->where('processType', 'clear_login')
             ->whereYear('updated_at', Carbon::now()->year)
             ->whereMonth('updated_at', Carbon::now()->month)
+            ->where('branchID', \request()->header('branchID'))
             ->latest('updated_at')
             ->first();
     }

@@ -22,7 +22,9 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
      */
     public function getAllStudentsEnrollments()
     {
-        return Student::query()->has('classes')->with(['classes', 'person'])->get();
+        return Student::query()->has('classes')->with(['classes', 'person'])
+            ->where('branchID', \request()->header('branchID'))
+            ->get();
     }
 
     /**
@@ -41,7 +43,9 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
             ->distinct()
             ->pluck('studentID');
 
-        return Student::query()->with('person')->findMany($notFreeCard);
+        return Student::query()->with('person')
+            ->where('branchID', \request()->header('branchID'))
+            ->findMany($notFreeCard);
     }
 
     /**
@@ -54,7 +58,9 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
             ->distinct()
             ->pluck('studentID');
 
-        return Student::query()->with('person')->findMany($enrollment);
+        return Student::query()->with('person')
+            ->where('branchID', \request()->header('branchID'))
+            ->findMany($enrollment);
     }
 
     /**
@@ -102,6 +108,7 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
         return Classes::query()->with(['subject', 'category', 'teacher', 'branch'])
             ->where('status', 'Active')
             ->whereNotIn('classID', $enrollment)
+            ->where('branchID', \request()->header('branchID'))
             ->get();
     }
 
@@ -226,7 +233,9 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
      */
     public function getAllClassesEnrollments()
     {
-        return Classes::query()->has('students')->with(['students', 'students.person'])->get();
+        return Classes::query()->has('students')->with(['students', 'students.person'])
+            ->where('branchID', \request()->header('branchID'))
+            ->get();
     }
 
     /**
@@ -271,6 +280,7 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface
             ->join('people', 'students.studentID', 'people.personID')
             ->where('people.status', 'Active')
             ->whereNotIn('studentID', $enrollment)
+            ->where('branchID', \request()->header('branchID'))
             ->get();
     }
 

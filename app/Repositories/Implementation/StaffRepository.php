@@ -38,6 +38,7 @@ class StaffRepository implements StaffRepositoryInterface
             ->join('employees', 'staff.staffID', 'employees.employeeID')
             ->join('people', 'employees.employeeID', 'people.personID')
             ->where('people.status', data_get($request, 'status'))
+            ->where('branchID', \request()->header('branchID'))
             ->get();
     }
 
